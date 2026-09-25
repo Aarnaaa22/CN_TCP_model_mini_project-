@@ -48,7 +48,7 @@ export default function App() {
     }
   }, []);
 
-  const { connected } = useSocket(handleEvent);
+  const { connected, emit } = useSocket(handleEvent);
 
   function handleReset() {
     dispatch({ event: { type: '__RESET__' } });
@@ -89,6 +89,7 @@ export default function App() {
               status={sim.status}
               totalPackets={sim.totalPackets}
               onReset={fullReset}
+              socketEmit={emit}
             />
           </div>
 

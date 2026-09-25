@@ -8,7 +8,14 @@
  * in real time — this is what drives the live visualization on the frontend.
  */
 
-const { simEvents } = require('../services/transferService');
+const { 
+  simEvents, 
+  startTransfer, 
+  stopTransfer, 
+  resetTransfer, 
+  updateConfig, 
+  injectError 
+} = require('../services/transferService');
 
 /**
  * Attach Socket.IO handlers to the server.
@@ -25,6 +32,32 @@ function initSocketHandler(io) {
 
     // Subscribe to simulation events
     simEvents.on('event', forwardEvent);
+
+    // REST-Replacement Event Handlers (Vercel Serverless Compatible)
+    socket.on('start_transfer', (data) => {
+      const { fileBuffer, fileName, errorInjections } = data;
+      startTransfer(Buffer.from(fileBuffer), fileName, errorInjections).catch(err => {
+        console.error('[Transfer] Error during transfer:', err.message);
+      });
+    });
+
+    socket.on('stop_transfer', () => {
+      stopTransfer();
+    });
+
+    socket.on('reset_transfer', () => {
+      resetTransfer();
+    });
+
+    socket.on('update_config', (data) => {
+      const { transmissionDelay, timeoutDuration } = data;
+      updateConfig(transmissionDelay, timeoutDuration);
+    });
+
+    socket.on('inject_error', (data) => {
+      const { packetNumber, errorType } = data;
+      injectError(packetNumber, errorType);
+    });
 
     socket.on('disconnect', () => {
       console.log(`[Socket.IO] Client disconnected: ${socket.id}`);

@@ -6,7 +6,6 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { startTransfer, stopTransfer, resetTransfer, updateConfig } from '../api/transferApi';
 import { SIMULATION_STATUS } from '../store/simulationStore';
 
 function fmtSize(bytes) {
@@ -34,7 +33,7 @@ function Slider({ label, value, min, max, step, onChange, format }) {
   );
 }
 
-export default function ControlPanel({ status, onReset, totalPackets }) {
+export default function ControlPanel({ status, onReset, totalPackets, socketEmit }) {
   const fileRef = useRef();
   const [file, setFile]             = useState(null);
   const [loading, setLoading]       = useState(false);
@@ -91,14 +90,21 @@ export default function ControlPanel({ status, onReset, totalPackets }) {
     setLoading(true);
     try {
       // Push config to backend first
-      await updateConfig({
+      socketEmit('update_config', {
         packetLossProbability:       lossPct / 100,
         packetCorruptionProbability: crptPct / 100,
         transmissionDelay:           delay,
         timeoutDuration:             timeout,
         packetSize:                  pktSize,
       });
-      await startTransfer(file, injected);
+
+      // Send file buffer over WebSocket
+      const fileBuffer = await file.arrayBuffer();
+      socketEmit('start_transfer', {
+        fileBuffer,
+        fileName: file.name,
+        errorInjections: injected
+      });
     } catch (err) {
       setError(err.message || 'Failed to start transfer.');
     } finally {
@@ -106,19 +112,17 @@ export default function ControlPanel({ status, onReset, totalPackets }) {
     }
   }
 
-  async function handleStop() {
-    try { await stopTransfer(); } catch {}
+  function handleStop() {
+    socketEmit('stop_transfer');
   }
 
-  async function handleReset() {
-    try {
-      await resetTransfer();
-      setFile(null);
-      setInjected([]);
-      setError('');
-      if (fileRef.current) fileRef.current.value = '';
-      onReset?.();
-    } catch {}
+  function handleReset() {
+    socketEmit('reset_transfer');
+    setFile(null);
+    setInjected([]);
+    setError('');
+    if (fileRef.current) fileRef.current.value = '';
+    onReset?.();
   }
 
   return (
