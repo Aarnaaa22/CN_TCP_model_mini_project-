@@ -71,74 +71,23 @@ This runs a simulation directly (no HTTP server needed) and prints a live event 
 
 ---
 
-## REST API Endpoints
-
-| Method | Endpoint                        | Description                          |
-|--------|---------------------------------|--------------------------------------|
-| `POST` | `/api/transfer/start`           | Start a file transfer simulation     |
-| `POST` | `/api/transfer/stop`            | Stop the running simulation          |
-| `POST` | `/api/transfer/reset`           | Reset simulation state               |
-| `GET`  | `/api/transfer/status`          | Get current status and statistics    |
-| `GET`  | `/api/transfer/packets`         | Get all packet states                |
-| `GET`  | `/api/transfer/config`          | Get current simulation config        |
-| `POST` | `/api/transfer/config`          | Update simulation settings           |
-| `POST` | `/api/transfer/inject-error`    | Manually force a packet to be lost or corrupted |
-
----
-
-### POST `/api/transfer/start`
-
-Upload a file and start the simulation.  
-Use `multipart/form-data` with a field named `file`.
-
-Optional: pass `errorInjections` as a JSON string field:
-```json
-[
-  { "packetNumber": 3, "errorType": "LOST" },
-  { "packetNumber": 6, "errorType": "CORRUPTED" }
-]
-```
-
-**Example (curl):**
-```bash
-curl -X POST http://localhost:5000/api/transfer/start \
-  -F "file=@myfile.txt" \
-  -F 'errorInjections=[{"packetNumber":3,"errorType":"LOST"},{"packetNumber":6,"errorType":"CORRUPTED"}]'
-```
-
----
-
-### POST `/api/transfer/config`
-
-Update simulation parameters:
-
-```json
-{
-  "packetLossProbability":       0.15,
-  "packetCorruptionProbability": 0.10,
-  "transmissionDelay":           500,
-  "timeoutDuration":             1500,
-  "maxRetries":                  5,
-  "packetSize":                  512
-}
-```
-
----
-
-### POST `/api/transfer/inject-error`
-
-Force a specific packet to be lost or corrupted (call before starting):
-
-```json
-{
-  "packetNumber": 3,
-  "errorType": "LOST"
-}
-```
-
----
-
 ## WebSocket (Socket.IO)
+
+This backend runs entirely on WebSocket connections to guarantee state persistence in ephemeral Serverless deployments (like Vercel). Connect to `http://localhost:5000` using Socket.IO.
+
+### Incoming Control Events (From Client)
+
+| Event                  | Description                               | Payload Example                                |
+|------------------------|-------------------------------------------|------------------------------------------------|
+| `start_transfer`       | Start a file transfer simulation          | `{ fileBuffer: <ArrayBuffer>, fileName: "a.txt", errorInjections: [...] }` |
+| `stop_transfer`        | Stop the running simulation               | `null`                                         |
+| `reset_transfer`       | Reset simulation state                    | `null`                                         |
+| `update_config`        | Update simulation settings                | `{ transmissionDelay: 500, timeoutDuration: 1500, ... }` |
+| `inject_error`         | Force a packet error (lost/corrupted)     | `{ packetNumber: 3, errorType: "LOST" }`       |
+
+---
+
+## Outgoing Subscription (To Client)
 
 Connect to `http://localhost:5000` using Socket.IO.  
 Listen for the `simulation_event` event:
