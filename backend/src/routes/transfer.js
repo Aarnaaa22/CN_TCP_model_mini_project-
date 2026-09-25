@@ -149,6 +149,15 @@ router.post('/config', (req, res) => {
   });
 
   updateConfig(updates);
+  
+  // Broadcast config update to clients so they can adjust animation instantly
+  const { simEvents } = require('../services/transferService');
+  simEvents.emit('event', {
+    type: 'CONFIG_UPDATED',
+    timestamp: Date.now(),
+    config: getConfig()
+  });
+
   res.json({ success: true, message: 'Config updated.', config: getConfig() });
 });
 

@@ -17,12 +17,13 @@ const STATE_CONFIG = {
   retransmitting: { bg: 'bg-purple-600', border: 'border-purple-400',text: 'text-white',      label: 'RETX',        glow: 'shadow-[0_0_12px_rgba(168,85,247,0.6)]' },
 };
 
-export default function NetworkDiagram({ activePacket, status }) {
+export default function NetworkDiagram({ activePacket, status, config }) {
   const [visible, setVisible]     = useState(false);
   const [animKey, setAnimKey]     = useState(0);
   const [history, setHistory]     = useState([]);   // last few events shown in middle
 
   const isRunning = status === 'RUNNING';
+  const delay = config?.transmissionDelay || 500;
 
   useEffect(() => {
     if (!activePacket) { setVisible(false); return; }
@@ -38,11 +39,10 @@ export default function NetworkDiagram({ activePacket, status }) {
 
     // Hide after animation completes
     const timer = setTimeout(() => setVisible(false),
-      activePacket.state === 'ack' ? 1500 : 2000
+      activePacket.state === 'ack' ? delay : delay * 1.5
     );
     return () => clearTimeout(timer);
-  }, [activePacket]);
-
+  }, [activePacket, delay]);
   const cfg = activePacket ? STATE_CONFIG[activePacket.state] || STATE_CONFIG.traveling : null;
   const isAck = activePacket?.state === 'ack';
 
@@ -92,7 +92,12 @@ export default function NetworkDiagram({ activePacket, status }) {
                   ${isAck ? 'packet-traveling-left' : 'packet-traveling-right'}
                   ${activePacket?.state === 'lost' ? 'packet-lost-anim' : ''}
                 `}
-                style={{ zIndex: 10 }}
+                style={{ 
+                  zIndex: 10,
+                  animationDuration: activePacket?.state === 'lost' 
+                    ? `${delay * 0.8}ms` 
+                    : isAck ? `${delay * 0.8}ms` : `${delay * 1.2}ms`
+                }}
               >
                 <span className={`text-[10px] font-bold ${cfg.text}`}>
                   P{activePacket?.packetNumber}

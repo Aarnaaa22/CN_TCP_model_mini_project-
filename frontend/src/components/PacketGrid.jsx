@@ -30,57 +30,59 @@ export default function PacketGrid({ packets }) {
   }
 
   return (
-    <div className="card card-glow p-5">
-      <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
+    <div className="card card-glow p-5 flex flex-col h-full">
+      <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4 flex-shrink-0">
         Packet Transmission Status
         <span className="ml-2 text-cyan-400">{entries.length} packets</span>
       </h2>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
-        {entries.map(pkt => {
-          const st = STATUS_STYLE[pkt.status] || STATUS_STYLE.CREATED;
-          const icon = STATUS_ICON[pkt.status] || '?';
-          const isActive = ['IN_TRANSIT', 'RETRANSMITTING', 'SENT'].includes(pkt.status);
+      <div className="flex-1 overflow-y-auto min-h-0 pr-2">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2 pb-2">
+          {entries.map(pkt => {
+            const st = STATUS_STYLE[pkt.status] || STATUS_STYLE.CREATED;
+            const icon = STATUS_ICON[pkt.status] || '?';
+            const isActive = ['IN_TRANSIT', 'RETRANSMITTING', 'SENT'].includes(pkt.status);
 
-          return (
-            <div
-              key={pkt.packetNumber}
-              className={`
-                relative flex flex-col items-center gap-1 p-2 rounded-xl border transition-all duration-300
-                ${st.bg} ${st.border}
-                ${isActive ? 'scale-105' : ''}
-              `}
-            >
-              {/* Packet number */}
-              <div className="text-sm font-bold text-white">P{pkt.packetNumber}</div>
+            return (
+              <div
+                key={pkt.packetNumber}
+                className={`
+                  relative flex flex-col items-center gap-1 p-2 rounded-xl border transition-all duration-300
+                  ${st.bg} ${st.border}
+                  ${isActive ? 'scale-105' : ''}
+                `}
+              >
+                {/* Packet number */}
+                <div className="text-sm font-bold text-white">P{pkt.packetNumber}</div>
 
-              {/* Status icon */}
-              <div className={`text-base font-bold ${
-                pkt.status === 'LOST'      ? 'text-red-400' :
-                pkt.status === 'CORRUPTED' ? 'text-amber-400' :
-                pkt.status === 'COMPLETED' || pkt.status === 'ACKED' ? 'text-green-400' :
-                pkt.status === 'TIMEOUT'   ? 'text-amber-400' :
-                pkt.status === 'RETRANSMITTING' ? 'text-purple-400' :
-                'text-cyan-400'
-              }`}>{icon}</div>
+                {/* Status icon */}
+                <div className={`text-base font-bold ${
+                  pkt.status === 'LOST'      ? 'text-red-400' :
+                  pkt.status === 'CORRUPTED' ? 'text-amber-400' :
+                  pkt.status === 'COMPLETED' || pkt.status === 'ACKED' ? 'text-green-400' :
+                  pkt.status === 'TIMEOUT'   ? 'text-amber-400' :
+                  pkt.status === 'RETRANSMITTING' ? 'text-purple-400' :
+                  'text-cyan-400'
+                }`}>{icon}</div>
 
-              {/* Status badge */}
-              <span className={`text-[8px] font-bold px-1 rounded ${st.badge} text-center leading-tight`}>
-                {pkt.status?.replace('_', ' ')}
-              </span>
+                {/* Status badge */}
+                <span className={`text-[8px] font-bold px-1 rounded ${st.badge} text-center leading-tight`}>
+                  {pkt.status?.replace('_', ' ')}
+                </span>
 
-              {/* Retry count */}
-              {pkt.retryCount > 0 && (
-                <span className="text-[8px] text-purple-400 font-mono">×{pkt.retryCount}</span>
-              )}
+                {/* Retry count */}
+                {pkt.retryCount > 0 && (
+                  <span className="text-[8px] text-purple-400 font-mono">×{pkt.retryCount}</span>
+                )}
 
-              {/* Active pulse ring */}
-              {isActive && (
-                <div className="absolute inset-0 rounded-xl border-2 border-cyan-400/40 animate-ping" />
-              )}
-            </div>
-          );
-        })}
+                {/* Active pulse ring */}
+                {isActive && (
+                  <div className="absolute inset-0 rounded-xl border-2 border-cyan-400/40 animate-ping" />
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

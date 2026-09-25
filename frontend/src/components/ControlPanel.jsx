@@ -5,7 +5,7 @@
  * Calls backend REST APIs directly.
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { startTransfer, stopTransfer, resetTransfer, updateConfig } from '../api/transferApi';
 import { SIMULATION_STATUS } from '../store/simulationStore';
 
@@ -63,6 +63,15 @@ export default function ControlPanel({ status, onReset, totalPackets }) {
     setError('');
     setInjected([]);
   }
+
+  // Allow other components (like CompletionPanel) to trigger a replay
+  useEffect(() => {
+    const handleReplay = () => {
+      if (file && !isRunning) handleStart();
+    };
+    window.addEventListener('replayTransfer', handleReplay);
+    return () => window.removeEventListener('replayTransfer', handleReplay);
+  }, [file, isRunning, lossPct, crptPct, delay, timeout, pktSize, injected]);
 
   function addInjection() {
     if (injPkt < 1) return;
@@ -125,10 +134,10 @@ export default function ControlPanel({ status, onReset, totalPackets }) {
         >
           <input ref={fileRef} type="file" className="hidden" onChange={handleFileChange} disabled={isRunning} />
           {file ? (
-            <div>
-              <div className="text-sm text-white font-medium truncate">{file.name}</div>
-              <div className="text-xs text-cyan-400 mt-0.5">{fmtSize(file.size)}</div>
-              <div className="text-xs text-slate-500 mt-0.5">≈ {estimatedPackets} packets @ {pktSize}B</div>
+            <div className="flex items-center justify-center gap-1 text-xs text-white overflow-hidden whitespace-nowrap">
+              <span className="font-medium truncate">{file.name}</span>
+              <span className="text-cyan-400 flex-shrink-0">({fmtSize(file.size)})</span>
+              <span className="text-slate-500 flex-shrink-0">≈ {estimatedPackets} pkts @ {pktSize}B</span>
             </div>
           ) : (
             <div className="text-slate-500 text-xs">Click to select a file</div>
@@ -160,21 +169,44 @@ export default function ControlPanel({ status, onReset, totalPackets }) {
       </div>
 
       {/* ── Timing ──────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-xs text-slate-400 mb-1">Delay (ms)</label>
-          <input type="number" min={100} max={3000} step={100} value={delay}
-            onChange={e => !isRunning && setDelay(Number(e.target.value))}
-            className="w-full bg-navy-700 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500/50"
-          />
-        </div>
-        <div>
-          <label className="block text-xs text-slate-400 mb-1">Timeout (ms)</label>
-          <input type="number" min={500} max={5000} step={100} value={timeout}
-            onChange={e => !isRunning && setTimeout_(Number(e.target.value))}
-            className="w-full bg-navy-700 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500/50"
-          />
-        </div>
+      <div className="flex flex-col gap-3">
+        <label className="text-xs text-slate-400">Simulation Timing</label>
+        <Slider label="Transfer Delay (Slows down animation)" value={delay} min={100} max={3000} step={100}
+          onChange={async v => {
+            setDelay(v);
+            if (isRunning) {
+              try {
+                await updateConfig({
+                  packetLossProbability:       lossPct / 100,
+                  packetCorruptionProbability: crptPct / 100,
+                  transmissionDelay:           v,
+                  timeoutDuration:             timeout,
+                  packetSize:                  pktSize,
+                });
+              } catch (err) {
+                console.error('Failed to update config:', err);
+              }
+            }
+          }} 
+          format={v => `${v} ms`} />
+        <Slider label="Timeout" value={timeout} min={500} max={5000} step={100}
+          onChange={async v => {
+            setTimeout_(v);
+            if (isRunning) {
+              try {
+                await updateConfig({
+                  packetLossProbability:       lossPct / 100,
+                  packetCorruptionProbability: crptPct / 100,
+                  transmissionDelay:           delay,
+                  timeoutDuration:             v,
+                  packetSize:                  pktSize,
+                });
+              } catch (err) {
+                console.error('Failed to update config:', err);
+              }
+            }
+          }} 
+          format={v => `${v} ms`} />
       </div>
 
       {/* ── Manual error injection ───────────────────────────── */}
@@ -229,13 +261,13 @@ export default function ControlPanel({ status, onReset, totalPackets }) {
 
       {/* ── Action buttons ───────────────────────────────────── */}
       <div className="flex flex-col gap-2 mt-auto">
-        {!isRunning && !isCompleted && (
+        {!isRunning && (
           <button onClick={handleStart} disabled={loading || !file}
             className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700
               text-white text-sm font-semibold hover:from-cyan-500 hover:to-blue-600
               disabled:opacity-40 disabled:cursor-not-allowed transition-all
               shadow-lg shadow-cyan-500/20">
-            {loading ? 'Starting…' : '▶  Start Transfer'}
+            {loading ? 'Starting…' : (isCompleted ? '▶  Replay Transfer' : '▶  Start Transfer')}
           </button>
         )}
         {isRunning && (
@@ -248,7 +280,7 @@ export default function ControlPanel({ status, onReset, totalPackets }) {
         <button onClick={handleReset}
           className="w-full py-2 rounded-xl border border-white/10 text-slate-400
             text-sm hover:bg-navy-700 hover:text-white transition-all">
-          ↺  Reset
+          ↺  Clear & Reset
         </button>
       </div>
     </div>

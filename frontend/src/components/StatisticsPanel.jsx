@@ -35,13 +35,13 @@ export default function StatisticsPanel({ stats, totalPackets }) {
         Transfer Statistics
       </h2>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+      <div className="grid grid-cols-2 gap-2 mb-4">
         <StatCard label="Total Packets"  value={total}           color="text-white" />
         <StatCard label="Delivered"      value={success}         color="text-green-400" />
         <StatCard label="Lost"           value={s.lostPackets   ?? 0} color="text-red-400" />
         <StatCard label="Corrupted"      value={s.corruptedPackets ?? 0} color="text-amber-400" />
-        <StatCard label="Retransmissions" value={s.retransmissions ?? 0} color="text-purple-400" />
-        <StatCard label="Total Attempts" value={s.totalAttempts ?? 0} />
+        <StatCard label="Retransmits"    value={s.retransmissions ?? 0} color="text-purple-400" />
+        <StatCard label="Total Attmpts"  value={s.totalAttempts ?? 0} />
         <StatCard label="Transfer Time"  value={fmtTime(s.transferTime)} />
         <StatCard label="File Size"      value={fmtBytes(s.originalFileSize)} />
       </div>

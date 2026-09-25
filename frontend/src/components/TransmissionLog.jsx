@@ -21,11 +21,13 @@ function formatTime(ts) {
 }
 
 export default function TransmissionLog({ events }) {
-  const bottomRef = useRef(null);
+  const containerRef = useRef(null);
 
   // Auto-scroll to latest entry
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
   }, [events.length]);
 
   return (
@@ -37,7 +39,7 @@ export default function TransmissionLog({ events }) {
         <span className="text-xs text-slate-600 font-mono">{events.length} events</span>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 font-mono text-xs flex flex-col gap-1 min-h-0" style={{ maxHeight: '320px' }}>
+      <div ref={containerRef} className="flex-1 overflow-y-auto p-4 font-mono text-xs flex flex-col gap-1 min-h-0">
         {events.length === 0 ? (
           <div className="text-slate-600 text-center mt-4">Waiting for simulation events…</div>
         ) : (
@@ -61,7 +63,6 @@ export default function TransmissionLog({ events }) {
             </div>
           ))
         )}
-        <div ref={bottomRef} />
       </div>
     </div>
   );

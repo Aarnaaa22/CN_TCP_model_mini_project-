@@ -78,8 +78,15 @@ export function simulationReducer(state, action) {
         fileName:    event.fileName || '',
         fileSize:    event.fileSize || 0,
         totalPackets: event.totalPackets || 0,
+        config:      event.config || null,
         events:      appendEvent(`Transfer started — ${event.totalPackets} packets`, 'cyan'),
         explanation: `Server A is preparing to send "${event.fileName}" to Server B. The file has been split into ${event.totalPackets} packets.`,
+      };
+
+    case 'CONFIG_UPDATED':
+      return {
+        ...state,
+        config: { ...state.config, ...event.config }
       };
 
     case 'PACKET_CREATED':
@@ -211,6 +218,9 @@ export function simulationReducer(state, action) {
         events:      appendEvent(`Transfer FAILED: ${event.message}`, 'red'),
         explanation: `The transfer failed: ${event.message}`,
       };
+
+    case '__RESET__':
+      return initialState;
 
     default:
       return state;
