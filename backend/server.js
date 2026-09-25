@@ -61,15 +61,18 @@ app.get('/', (req, res) => {
 // ── Socket.IO Handlers ────────────────────────────────────────────────────────
 initSocketHandler(io);
 
-// ── Start Server ──────────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 5000;
+// ── Start Server (Local/Render) or Export (Vercel) ──────────────────────────
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => {
+    console.log('');
+    console.log('╔════════════════════════════════════════════════════════╗');
+    console.log('║   TCP File Transfer Simulation — Backend               ║');
+    console.log(`║   Server running at http://localhost:${PORT}              ║`);
+    console.log('║   Socket.IO ready for real-time events                 ║');
+    console.log('╚════════════════════════════════════════════════════════╝');
+    console.log('');
+  });
+}
 
-server.listen(PORT, () => {
-  console.log('');
-  console.log('╔════════════════════════════════════════════════════════╗');
-  console.log('║   TCP File Transfer Simulation — Backend               ║');
-  console.log(`║   Server running at http://localhost:${PORT}              ║`);
-  console.log('║   Socket.IO ready for real-time events                 ║');
-  console.log('╚════════════════════════════════════════════════════════╝');
-  console.log('');
-});
+module.exports = server;

@@ -76,7 +76,7 @@ export default function App() {
         {!connected && (
           <div className="bg-red-900/30 border border-red-500/40 rounded-xl px-5 py-3 text-sm text-red-400 flex items-center gap-2">
             <span>⚠</span>
-            <span>Backend disconnected. Make sure the backend server is running on <code className="font-mono">localhost:5000</code>.</span>
+            <span>Backend disconnected. Make sure the backend server is running.</span>
           </div>
         )}
 
