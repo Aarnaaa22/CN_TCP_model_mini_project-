@@ -2,6 +2,7 @@ import { useReducer, useCallback, useState } from 'react';
 import { useSocket }              from './hooks/useSocket';
 import { simulationReducer, initialState } from './store/simulationStore';
 
+import LandingPage         from './components/LandingPage';
 import Header              from './components/Header';
 import NetworkDiagram      from './components/NetworkDiagram';
 import ControlPanel        from './components/ControlPanel';
@@ -16,6 +17,7 @@ export default function App() {
   const [sim, dispatch]       = useReducer(simulationReducer, initialState);
   const [lastEventType, setLastEventType] = useState(null);
   const [showCompletion, setShowCompletion] = useState(false);
+  const [showLanding, setShowLanding]       = useState(true);
 
   const handleEvent = useCallback((event) => {
     dispatch({ event });
@@ -34,9 +36,18 @@ export default function App() {
     }, 100);
   }
 
+  if (showLanding) {
+    return <LandingPage onStart={() => setShowLanding(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-[#F7F4EA] text-[#1E293B] flex flex-col selection:bg-[#2563EB] selection:text-white">
-      <Header connected={connected} status={sim.status} />
+      {/* Header with Back to Landing Page button */}
+      <Header
+        connected={connected}
+        status={sim.status}
+        onShowLanding={() => setShowLanding(true)}
+      />
 
       <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-4 flex flex-col gap-4">
         {!connected && (
