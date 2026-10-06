@@ -52,16 +52,47 @@ export default function ControlPanel({ status, totalPackets, onReset, socketEmit
     setError(null);
   }
 
+  // Plan B: Load pre-generated sample.txt without selecting local file
+  function loadSampleFile() {
+    const textContent = `TCP Model Simulation Evaluation Sample File
+===========================================
+This is sample.txt used for testing TCP reliable file transfer simulation.
+Features tested:
+1. Checksum generation (16-bit internet checksum)
+2. Sequence & Acknowledgement (Seq/Ack) numbers
+3. Dynamic Timeout & Retransmission (RTO)
+4. Packet Loss & Error Recovery
+5. Stop-and-Wait / Sliding Window flow control
+
+Packet 1: Handshake & Metadata verification.
+Packet 2: Data segment payload transfer.
+Packet 3: Error detection & Checksum validation.
+Packet 4: Retransmission mechanism evaluation.
+Packet 5: Receiver buffer assembly.
+Packet 6: Transmission completion & SHA-256 integrity check.
+`;
+
+    const fullText = Array(4).fill(textContent).join("\n---\n");
+    const blob = new Blob([fullText], { type: 'text/plain' });
+    const sampleFile = new File([blob], 'sample.txt', { type: 'text/plain' });
+
+    setFile(sampleFile);
+    setFileMeta({ name: 'sample.txt', size: blob.size });
+    setPktSize(512);
+    setDelay(1200);
+    setError(null);
+  }
+
   // Generate a clean 6-packet demo payload (~3 KB sliced by 512B = 6 packets exactly!)
   function loadDemoPayload(presetType = 'NORMAL') {
     const line = "Transmission Control Protocol (TCP) reliable transfer evaluation demo payload line. ";
     const demoContent = Array(45).fill(line).join("\n");
 
     const blob = new Blob([demoContent], { type: 'text/plain' });
-    const dummyFile = new File([blob], 'demo_evaluation_data.txt', { type: 'text/plain' });
+    const dummyFile = new File([blob], 'sample.txt', { type: 'text/plain' });
 
     setFile(dummyFile);
-    setFileMeta({ name: 'demo_evaluation_data.txt', size: blob.size });
+    setFileMeta({ name: 'sample.txt', size: blob.size });
     setPktSize(512);
     setDelay(1200);
 
@@ -78,6 +109,7 @@ export default function ControlPanel({ status, totalPackets, onReset, socketEmit
       setCrptPct(0);
       setInjected([{ packetNumber: 3, errorType: 'CORRUPTED' }]);
     }
+
     setError(null);
   }
 
@@ -167,6 +199,15 @@ export default function ControlPanel({ status, totalPackets, onReset, socketEmit
         <div>
           <div className="flex justify-between items-center mb-1.5">
             <label className="text-[9px] font-['Press_Start_2P'] text-[#1E293B] uppercase">Custom File</label>
+            <button
+              type="button"
+              onClick={loadSampleFile}
+              disabled={isRunning}
+              className="text-[8px] font-['Press_Start_2P'] px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded border border-[#1E293B] shadow-[1px_1px_0px_#1E293B] cursor-pointer disabled:opacity-50 flex items-center gap-1"
+              title="Plan B: Load sample.txt without selecting local file"
+            >
+              📄 USE SAMPLE.TXT
+            </button>
           </div>
 
           <div
@@ -186,7 +227,7 @@ export default function ControlPanel({ status, totalPackets, onReset, socketEmit
             />
             {fileMeta ? (
               <div className="flex flex-col items-center gap-0.5">
-                <span className="text-xl">📄</span>
+                <span className="text-xl">💾</span>
                 <span className="text-xs font-bold text-[#1E293B] truncate max-w-[200px] font-['Pixelify_Sans']">
                   {fileMeta.name}
                 </span>
@@ -196,8 +237,9 @@ export default function ControlPanel({ status, totalPackets, onReset, socketEmit
               </div>
             ) : (
               <div className="flex flex-col items-center gap-1 text-[#64748B]">
-                <span className="text-xl">💾</span>
+                <span className="text-xl">📁</span>
                 <span className="font-bold text-[#1E293B] text-xs font-['Pixelify_Sans']">Click to Select Custom File</span>
+                <span className="text-[8px] text-[#2563EB] font-['Press_Start_2P'] mt-0.5">OR CLICK "USE SAMPLE.TXT" ABOVE</span>
               </div>
             )}
           </div>
@@ -299,7 +341,7 @@ export default function ControlPanel({ status, totalPackets, onReset, socketEmit
               disabled={loading || !file}
               className="btn-pixel btn-pixel-primary w-full py-3.5 text-xs flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span>▶</span>
+              <span>▶ </span>
               <span>{loading ? 'STARTING...' : (isCompleted ? 'REPLAY SIMULATION' : 'START SIMULATION')}</span>
             </button>
           )}
@@ -309,7 +351,7 @@ export default function ControlPanel({ status, totalPackets, onReset, socketEmit
               onClick={handleStop}
               className="btn-pixel btn-pixel-danger w-full py-3.5 text-xs flex items-center justify-center gap-2"
             >
-              <span>⏹</span>
+              <span>⏹ </span>
               <span>STOP TRANSFER</span>
             </button>
           )}
@@ -318,7 +360,7 @@ export default function ControlPanel({ status, totalPackets, onReset, socketEmit
             onClick={handleReset}
             className="btn-pixel btn-pixel-secondary w-full py-2.5 text-xs flex items-center justify-center gap-2"
           >
-            <span>🔄</span>
+            <span>🔄 </span>
             <span>CLEAR & RESET</span>
           </button>
         </div>

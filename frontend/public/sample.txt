@@ -1,0 +1,16 @@
+TCP Model Simulation Evaluation Sample File
+===========================================
+This is sample.txt used for testing TCP reliable file transfer simulation.
+Features tested:
+1. Checksum generation (16-bit internet checksum)
+2. Sequence & Acknowledgement (Seq/Ack) numbers
+3. Dynamic Timeout & Retransmission (RTO)
+4. Packet Loss & Error Recovery
+5. Stop-and-Wait / Sliding Window flow control
+
+Packet 1: Handshake & Metadata verification.
+Packet 2: Data segment payload transfer.
+Packet 3: Error detection & Checksum validation.
+Packet 4: Retransmission mechanism evaluation.
+Packet 5: Receiver buffer assembly.
+Packet 6: Transmission completion & SHA-256 integrity check.
