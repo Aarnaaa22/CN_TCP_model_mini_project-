@@ -1,81 +1,61 @@
 import { useState, useEffect } from 'react';
 
-// Retro CRT PC Monitor & Tower SVG Illustration Component (matching retro 90s PC sticker design)
-function RetroPCMonitor({ type = 'sender', className = "w-16 h-16" }) {
+// Classic Windows 95/98/XP Desktop SVG Icons
+function MyComputerIcon({ className = "w-8 h-8" }) {
   return (
     <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* PC Tower Base */}
-      <rect x="15" y="60" width="70" height="28" rx="2" fill="#CBD5E1" stroke="#1E293B" strokeWidth="4" />
-      <rect x="22" y="66" width="30" height="4" fill="#64748B" stroke="#1E293B" strokeWidth="2" />
-      <rect x="22" y="74" width="8" height="6" fill="#475569" stroke="#1E293B" strokeWidth="1.5" />
-      <circle cx="75" cy="74" r="3" fill="#22C55E" stroke="#1E293B" strokeWidth="1.5" />
-      <rect x="62" y="72" width="6" height="6" fill="#2563EB" stroke="#1E293B" strokeWidth="1.5" />
-      <rect x="15" y="85" width="70" height="3" fill="#94A3B8" />
+      <rect x="20" y="15" width="60" height="46" rx="3" fill="#E2E8F0" stroke="#1E293B" strokeWidth="4" />
+      <rect x="25" y="20" width="50" height="36" fill="#2563EB" />
+      <rect x="28" y="23" width="22" height="14" fill="#FFFDF5" stroke="#1E293B" strokeWidth="1.5" />
+      <rect x="28" y="23" width="22" height="4" fill="#1D4ED8" />
+      <rect x="15" y="65" width="70" height="20" rx="2" fill="#CBD5E1" stroke="#1E293B" strokeWidth="4" />
+      <rect x="22" y="70" width="28" height="4" fill="#64748B" />
+      <circle cx="72" cy="75" r="3" fill="#22C55E" />
+    </svg>
+  );
+}
 
-      {/* CRT Monitor Case */}
-      <rect x="18" y="10" width="64" height="48" rx="4" fill="#E2E8F0" stroke="#1E293B" strokeWidth="4" />
-      <rect x="22" y="14" width="56" height="40" rx="3" fill="#94A3B8" stroke="#1E293B" strokeWidth="3" />
+function NetworkGlobeIcon({ className = "w-8 h-8" }) {
+  return (
+    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="38" fill="#0284C7" stroke="#1E293B" strokeWidth="4" />
+      <ellipse cx="50" cy="50" rx="38" ry="16" fill="none" stroke="#FFF" strokeWidth="3" />
+      <line x1="50" y1="12" x2="50" y2="88" stroke="#FFF" strokeWidth="3" />
+      <line x1="12" y1="50" x2="88" y2="50" stroke="#FFF" strokeWidth="3" />
+      <rect x="55" y="55" width="30" height="24" fill="#E2E8F0" stroke="#1E293B" strokeWidth="3" />
+      <rect x="58" y="58" width="24" height="18" fill="#2563EB" />
+    </svg>
+  );
+}
 
-      {/* Screen Content Variants */}
-      {type === 'sender' && (
-        <g>
-          <rect x="25" y="17" width="50" height="34" rx="2" fill="#2563EB" />
-          <rect x="28" y="20" width="22" height="16" fill="#FFFDF5" stroke="#1E293B" strokeWidth="1.5" />
-          <rect x="28" y="20" width="22" height="4" fill="#1D4ED8" />
-          <rect x="36" y="26" width="24" height="18" fill="#FFFDF5" stroke="#1E293B" strokeWidth="1.5" />
-          <rect x="36" y="26" width="24" height="4" fill="#2563EB" />
-          <path d="M52 36 L58 42 L54 44 Z" fill="#1E293B" />
-        </g>
-      )}
+function RecycleBinIcon({ className = "w-8 h-8" }) {
+  return (
+    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M25 30 L30 85 L70 85 L75 30 Z" fill="#E2E8F0" stroke="#1E293B" strokeWidth="4" />
+      <rect x="20" y="20" width="60" height="10" rx="2" fill="#94A3B8" stroke="#1E293B" strokeWidth="4" />
+      <rect x="42" y="14" width="16" height="6" fill="#64748B" stroke="#1E293B" strokeWidth="2" />
+      <path d="M40 45 L50 35 L60 45 M50 35 L50 65" stroke="#22C55E" strokeWidth="4" strokeLinecap="round" />
+    </svg>
+  );
+}
 
-      {type === 'receiver' && (
-        <g>
-          <rect x="25" y="17" width="50" height="34" rx="2" fill="#0284C7" />
-          <rect x="29" y="21" width="42" height="26" fill="#080C16" stroke="#1E293B" strokeWidth="1.5" />
-          <rect x="33" y="25" width="14" height="8" fill="#F97316" stroke="#FFF" strokeWidth="1" />
-          <rect x="51" y="25" width="14" height="8" fill="#10B981" stroke="#FFF" strokeWidth="1" />
-          <rect x="33" y="35" width="32" height="8" fill="#38BDF8" stroke="#FFF" strokeWidth="1" />
-        </g>
-      )}
+function FolderIcon({ className = "w-8 h-8" }) {
+  return (
+    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15 25 L40 25 L50 35 L85 35 L85 75 L15 75 Z" fill="#FACC15" stroke="#1E293B" strokeWidth="4" />
+      <path d="M15 35 L85 35 L85 75 L15 75 Z" fill="#EAB308" stroke="#1E293B" strokeWidth="3" />
+    </svg>
+  );
+}
 
-      {type === 'bliss' && (
-        <g>
-          <rect x="25" y="17" width="50" height="34" rx="2" fill="#38BDF8" />
-          <circle cx="35" cy="24" r="4" fill="#FFF" opacity="0.8" />
-          <circle cx="55" cy="22" r="5" fill="#FFF" opacity="0.8" />
-          <path d="M25 38 Q 45 28, 75 42 L75 51 L25 51 Z" fill="#22C55E" />
-          <path d="M45 42 Q 60 34, 75 46 L75 51 L45 51 Z" fill="#15803D" />
-        </g>
-      )}
-
-      {type === 'tictactoe' && (
-        <g>
-          <rect x="25" y="17" width="50" height="34" rx="2" fill="#080C16" />
-          <line x1="41" y1="20" x2="41" y2="48" stroke="#FACC15" strokeWidth="2" />
-          <line x1="57" y1="20" x2="57" y2="48" stroke="#FACC15" strokeWidth="2" />
-          <line x1="28" y1="29" x2="72" y2="29" stroke="#FACC15" strokeWidth="2" />
-          <line x1="28" y1="39" x2="72" y2="39" stroke="#FACC15" strokeWidth="2" />
-          <path d="M31 23 L37 27 M37 23 L31 27" stroke="#EF4444" strokeWidth="2" />
-          <circle cx="49" cy="25" r="3" fill="none" stroke="#38BDF8" strokeWidth="2" />
-          <path d="M63 32 L69 36 M69 32 L63 36" stroke="#EF4444" strokeWidth="2" />
-          <circle cx="34" cy="44" r="3" fill="none" stroke="#38BDF8" strokeWidth="2" />
-        </g>
-      )}
-
-      {type === 'happy' && (
-        <g>
-          <rect x="25" y="17" width="50" height="34" rx="2" fill="#38BDF8" />
-          <rect x="30" y="20" width="40" height="28" fill="#FFFDF5" stroke="#1E293B" strokeWidth="1.5" />
-          <rect x="30" y="20" width="40" height="5" fill="#2563EB" />
-          <rect x="38" y="30" width="4" height="4" fill="#1E293B" />
-          <rect x="58" y="30" width="4" height="4" fill="#1E293B" />
-          <path d="M42 39 Q 50 45, 58 39" fill="none" stroke="#1E293B" strokeWidth="2" strokeLinecap="round" />
-        </g>
-      )}
-
-      {/* Ventilation & LED */}
-      <rect x="68" y="52" width="10" height="2" fill="#64748B" />
-      <circle cx="28" cy="53" r="1.5" fill="#22C55E" />
+function CDRomIcon({ className = "w-8 h-8" }) {
+  return (
+    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="15" y="45" width="70" height="35" rx="3" fill="#CBD5E1" stroke="#1E293B" strokeWidth="4" />
+      <rect x="25" y="55" width="40" height="6" fill="#64748B" />
+      <circle cx="73" cy="62" r="3" fill="#22C55E" />
+      <circle cx="50" cy="35" r="24" fill="#E2E8F0" stroke="#1E293B" strokeWidth="3" />
+      <circle cx="50" cy="35" r="8" fill="#38BDF8" stroke="#1E293B" strokeWidth="2" />
     </svg>
   );
 }
@@ -106,7 +86,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
       <header className="sticky top-0 z-50 bg-[#FFFDF5] border-b-3 border-[#1E293B] shadow-[0_4px_0px_rgba(30,41,59,0.15)] py-2.5 mb-8">
         <div className="max-w-[1200px] mx-auto px-4 flex flex-wrap justify-between items-center gap-4">
           <div className="flex items-center gap-3 cursor-pointer" onClick={onBackToLanding}>
-            <RetroPCMonitor type="happy" className="w-9 h-9" />
+            <MyComputerIcon className="w-8 h-8" />
             <div className="px-2.5 py-1 bg-[#2563EB] text-white font-['Press_Start_2P'] text-[9px] border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B]">
               TCP_OS
             </div>
@@ -172,11 +152,15 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between">
               <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[#1E293B] leading-tight font-['Pixelify_Sans']">
                 TCP <span className="text-[#2563EB] underline decoration-wavy decoration-[#F97316]">Flow & Error</span> Control
               </h1>
-              <RetroPCMonitor type="bliss" className="w-16 h-16 hidden md:block pixel-float" />
+              <div className="hidden md:flex items-center gap-3">
+                <NetworkGlobeIcon className="w-12 h-12" />
+                <CDRomIcon className="w-12 h-12" />
+                <RecycleBinIcon className="w-12 h-12" />
+              </div>
             </div>
 
             <p className="text-base md:text-lg text-[#475569] max-w-[850px] leading-relaxed font-['Pixelify_Sans']">
@@ -202,37 +186,34 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
               </a>
             </div>
 
-            {/* CRT TOPOLOGY LIVE PREVIEW STAGE WITH RETRO PC MONITORS */}
-            <div className="bg-[#0D1222] border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg p-5 flex flex-col gap-4 relative overflow-hidden">
+            {/* LIGHT RETRO WINDOWS TOPOLOGY LIVE PREVIEW STAGE */}
+            <div className="bg-[#F8FAFC] border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg p-5 flex flex-col gap-4 relative overflow-hidden">
 
-              {/* CRT Scanline Overlay Effect */}
-              <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] opacity-60 z-10"></div>
-
-              {/* Status Bar */}
-              <div className="flex justify-between items-center border-b border-[#233054] pb-3 font-['Press_Start_2P'] text-[8px]">
-                <div className="flex items-center gap-2 text-[#38BDF8]">
-                  <span className="animate-pulse">■</span>
+              {/* Status Bar Header */}
+              <div className="flex justify-between items-center bg-[#E2E8F0] border-2 border-[#1E293B] p-2.5 rounded font-['Press_Start_2P'] text-[8px] shadow-[2px_2px_0px_#1E293B]">
+                <div className="flex items-center gap-2 text-[#1E293B]">
+                  <span className="text-[#2563EB] animate-pulse">■</span>
                   <span>LIVE PACKET STREAM TOPOLOGY</span>
                 </div>
-                <div className="bg-[#064E3B] text-[#34D399] border border-[#059669] px-2.5 py-1 rounded shadow-[1px_1px_0px_#000]">
+                <div className="bg-[#5BA848] text-white border-2 border-[#1E293B] px-2.5 py-1 rounded shadow-[1px_1px_0px_#1E293B]">
                   TRANSMITTING
                 </div>
               </div>
 
-              {/* Nodes Grid */}
+              {/* Nodes Grid (Light Windows Design) */}
               <div className="grid grid-cols-1 md:grid-cols-[210px_1fr_210px] gap-6 items-center py-2">
                 
-                {/* Sender Node with Retro PC Illustration */}
-                <div className="bg-[#18223D] border-2 border-[#1E293B] shadow-[3px_3px_0px_#1E293B] rounded p-3 text-center flex flex-col items-center gap-2 relative">
+                {/* Sender Node */}
+                <div className="bg-[#FFFDF5] border-3 border-[#1E293B] shadow-[3px_3px_0px_#1E293B] rounded-lg p-3 text-center flex flex-col items-center gap-2 relative">
                   <span className="absolute -top-3 left-3 text-xs">📡</span>
-                  <RetroPCMonitor type="sender" className="w-16 h-16 drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)]" />
-                  <div className="bg-[#080C16] border border-[#1E293B] rounded p-2 w-full">
-                    <div className="font-['Press_Start_2P'] text-[8px] text-[#38BDF8] mb-1">SENDER</div>
-                    <div className="font-['VT323'] text-xl font-bold text-[#60A5FA]">
+                  <MyComputerIcon className="w-14 h-14" />
+                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-2 w-full">
+                    <div className="font-['Press_Start_2P'] text-[8px] text-[#2563EB] mb-1">SENDER</div>
+                    <div className="font-['VT323'] text-2xl font-bold text-[#1D4ED8]">
                       SEQ #{seq}
                     </div>
                   </div>
-                  <div className="font-['Press_Start_2P'] text-[7px] text-[#94A3B8]">
+                  <div className="font-['Press_Start_2P'] text-[7px] text-[#64748B]">
                     SERVER A [CWND 64K]
                   </div>
                 </div>
@@ -241,40 +222,40 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
                 <div className="flex flex-col gap-5 py-2">
                   
                   {/* Data Track */}
-                  <div className="relative h-9 flex flex-col justify-center">
-                    <div className="flex justify-between items-center text-[7px] font-['Press_Start_2P'] text-[#94A3B8] mb-1">
+                  <div className="relative h-10 flex flex-col justify-center">
+                    <div className="flex justify-between items-center text-[7px] font-['Press_Start_2P'] text-[#475569] mb-1">
                       <span className="flex items-center gap-1">
                         <span className="w-1.5 h-1.5 bg-[#2563EB] inline-block"></span>
                         DATA STREAM
                       </span>
                       <span>TCP SEGMENT ▶</span>
                     </div>
-                    <div className="h-2.5 bg-[#1E293B] rounded border border-[#233054] overflow-hidden relative">
+                    <div className="h-3 bg-[#E2E8F0] rounded border-2 border-[#1E293B] overflow-hidden relative shadow-[inner_1px_1px_0px_#000]">
                       <div className="wire-data w-full h-full"></div>
                     </div>
                     <div 
                       key={`data-${animKey}`}
-                      className="absolute left-0 top-3 font-['Press_Start_2P'] text-[7px] bg-[#2563EB] text-white px-2 py-1 rounded border-2 border-[#1E293B] shadow-[2px_2px_0px_#000] packet-traveling-right"
+                      className="absolute left-0 top-3.5 font-['Press_Start_2P'] text-[7px] bg-[#2563EB] text-white px-2 py-1 rounded border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B] packet-traveling-right z-20"
                     >
                       DATA #{seq} [1460B]
                     </div>
                   </div>
 
                   {/* ACK Track */}
-                  <div className="relative h-9 flex flex-col justify-center">
-                    <div className="flex justify-between items-center text-[7px] font-['Press_Start_2P'] text-[#94A3B8] mb-1">
+                  <div className="relative h-10 flex flex-col justify-center">
+                    <div className="flex justify-between items-center text-[7px] font-['Press_Start_2P'] text-[#475569] mb-1">
                       <span className="flex items-center gap-1">
                         <span className="w-1.5 h-1.5 bg-[#F97316] inline-block"></span>
                         ACK RETURN
                       </span>
                       <span>◀ ACKNOWLEDGEMENT</span>
                     </div>
-                    <div className="h-2.5 bg-[#1E293B] rounded border border-[#233054] overflow-hidden relative">
+                    <div className="h-3 bg-[#E2E8F0] rounded border-2 border-[#1E293B] overflow-hidden relative shadow-[inner_1px_1px_0px_#000]">
                       <div className="wire-ack w-full h-full"></div>
                     </div>
                     <div 
                       key={`ack-${animKey}`}
-                      className="absolute right-0 top-3 font-['Press_Start_2P'] text-[7px] bg-[#F97316] text-[#0C101D] px-2 py-1 rounded border-2 border-[#1E293B] shadow-[2px_2px_0px_#000] packet-traveling-left"
+                      className="absolute right-0 top-3.5 font-['Press_Start_2P'] text-[7px] bg-[#F97316] text-[#0C101D] px-2 py-1 rounded border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B] packet-traveling-left z-20"
                     >
                       ACK #{ack}
                     </div>
@@ -282,17 +263,17 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
 
                 </div>
 
-                {/* Receiver Node with Retro PC Illustration */}
-                <div className="bg-[#18223D] border-2 border-[#1E293B] shadow-[3px_3px_0px_#1E293B] rounded p-3 text-center flex flex-col items-center gap-2 relative">
+                {/* Receiver Node */}
+                <div className="bg-[#FFFDF5] border-3 border-[#1E293B] shadow-[3px_3px_0px_#1E293B] rounded-lg p-3 text-center flex flex-col items-center gap-2 relative">
                   <span className="absolute -top-3 right-3 text-xs">📬</span>
-                  <RetroPCMonitor type="receiver" className="w-16 h-16 drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)]" />
-                  <div className="bg-[#080C16] border border-[#1E293B] rounded p-2 w-full">
+                  <NetworkGlobeIcon className="w-14 h-14" />
+                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-2 w-full">
                     <div className="font-['Press_Start_2P'] text-[8px] text-[#F97316] mb-1">RECEIVER</div>
-                    <div className="font-['VT323'] text-xl font-bold text-[#F97316]">
+                    <div className="font-['VT323'] text-2xl font-bold text-[#C2410C]">
                       ACK #{ack}
                     </div>
                   </div>
-                  <div className="font-['Press_Start_2P'] text-[7px] text-[#94A3B8]">
+                  <div className="font-['Press_Start_2P'] text-[7px] text-[#64748B]">
                     SERVER B [RCV_BUFF]
                   </div>
                 </div>
@@ -300,8 +281,8 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
               </div>
 
               {/* Bottom Control Bar */}
-              <div className="border-t border-[#233054] pt-3 flex flex-wrap justify-between items-center gap-3">
-                <div className="flex flex-wrap gap-3 text-[11px] text-[#94A3B8] font-semibold">
+              <div className="border-t-2 border-[#E2E8F0] pt-3 flex flex-wrap justify-between items-center gap-3">
+                <div className="flex flex-wrap gap-3 text-[11px] text-[#475569] font-bold">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 bg-[#2563EB] border border-black inline-block"></span> In Transit
                   </span>
@@ -309,7 +290,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
                     <span className="w-2.5 h-2.5 bg-[#F97316] border border-black inline-block"></span> ACK Return
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 bg-[#10B981] border border-black inline-block"></span> Received
+                    <span className="w-2.5 h-2.5 bg-[#5BA848] border border-black inline-block"></span> Received
                   </span>
                   <span className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 bg-[#EF4444] border border-black inline-block"></span> Loss / Retx
@@ -317,7 +298,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
                 </div>
                 <button
                   onClick={manualPulseSegment}
-                  className="bg-[#1E293B] hover:bg-[#38BDF8] text-[#38BDF8] hover:text-[#0C101D] border-2 border-[#38BDF8] font-['Press_Start_2P'] text-[8px] px-3.5 py-2 rounded cursor-pointer transition-colors shadow-[2px_2px_0px_#000]"
+                  className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white border-2 border-[#1E293B] font-['Press_Start_2P'] text-[8px] px-3.5 py-2 rounded cursor-pointer transition-transform shadow-[2px_2px_0px_#1E293B] active:translate-x-[1px] active:translate-y-[1px]"
                 >
                   ⚡ TRANSMIT NEXT SEGMENT
                 </button>
@@ -332,7 +313,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
         <section className="card retro-card overflow-hidden" id="objective">
           <div className="retro-window-header">
             <div className="flex items-center gap-2">
-              <span>💻</span>
+              <span>📂</span>
               <span>WINDOW_02 :: AIM_AND_OBJECTIVE.SYS</span>
             </div>
             <div className="retro-window-controls">
@@ -348,7 +329,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
               <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB]">
                 PROJECT AIM & OBJECTIVES
               </div>
-              <RetroPCMonitor type="tictactoe" className="w-12 h-12 hidden sm:block" />
+              <FolderIcon className="w-10 h-10 hidden sm:block" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-6 items-stretch">
@@ -430,7 +411,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
               <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition-transform">
                 <div className="bg-[#1E293B] text-white font-['Press_Start_2P'] text-[8px] p-2.5 border-b-3 border-[#1E293B] flex justify-between items-center">
                   <span>MODULE: 01</span>
-                  <RetroPCMonitor type="sender" className="w-6 h-6" />
+                  <MyComputerIcon className="w-6 h-6" />
                 </div>
                 <div className="p-5 flex flex-col gap-3 flex-1 justify-between">
                   <div>
@@ -442,10 +423,10 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
                       TCP regulates packet transmission based on the receiver's available buffer capacity (`RCV_WND`) to prevent congestion and buffer overflow.
                     </p>
                   </div>
-                  <div className="bg-[#0C101D] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#94A3B8]">
-                    <div className="text-[#38BDF8]">RCV_WND: 65,535 bytes</div>
-                    <div className="text-[#34D399]">CWND: min(CWND, RCV_WND)</div>
-                    <div className="text-[#FACC15]">Buffer Status: 0% Overflow</div>
+                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B]">
+                    <div className="text-[#2563EB] font-bold">RCV_WND: 65,535 bytes</div>
+                    <div className="text-[#16A34A] font-bold">CWND: min(CWND, RCV_WND)</div>
+                    <div className="text-[#D97706] font-bold">Buffer Status: 0% Overflow</div>
                   </div>
                 </div>
               </div>
@@ -454,7 +435,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
               <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition-transform">
                 <div className="bg-[#1E293B] text-white font-['Press_Start_2P'] text-[8px] p-2.5 border-b-3 border-[#1E293B] flex justify-between items-center">
                   <span>MODULE: 02</span>
-                  <RetroPCMonitor type="tictactoe" className="w-6 h-6" />
+                  <NetworkGlobeIcon className="w-6 h-6" />
                 </div>
                 <div className="p-5 flex flex-col gap-3 flex-1 justify-between">
                   <div>
@@ -466,10 +447,10 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
                       Detect corrupted data using 16-bit internet checksums. Automatically retransmit lost packets upon timeout (RTO) or duplicate ACKs.
                     </p>
                   </div>
-                  <div className="bg-[#0C101D] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#94A3B8]">
-                    <div className="text-[#EF4444]">CRC Mismatch: Corrupt Packet</div>
-                    <div className="text-[#FB923C]">Duplicate ACKs: 3 Received</div>
-                    <div className="text-[#A855F7]">Fast Retransmit: Segment Resent</div>
+                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B]">
+                    <div className="text-[#DC2626] font-bold">CRC Mismatch: Corrupt Packet</div>
+                    <div className="text-[#EA580C] font-bold">Duplicate ACKs: 3 Received</div>
+                    <div className="text-[#9333EA] font-bold">Fast Retransmit: Segment Resent</div>
                   </div>
                 </div>
               </div>
@@ -478,7 +459,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
               <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition-transform">
                 <div className="bg-[#1E293B] text-white font-['Press_Start_2P'] text-[8px] p-2.5 border-b-3 border-[#1E293B] flex justify-between items-center">
                   <span>MODULE: 03</span>
-                  <RetroPCMonitor type="receiver" className="w-6 h-6" />
+                  <CDRomIcon className="w-6 h-6" />
                 </div>
                 <div className="p-5 flex flex-col gap-3 flex-1 justify-between">
                   <div>
@@ -490,10 +471,10 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
                       Trace data payload fragmentation into distinct TCP segments, tracking `SND.NXT` and `RCV.NXT` sequence pointers live in action.
                     </p>
                   </div>
-                  <div className="bg-[#0C101D] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#94A3B8]">
-                    <div className="text-[#60A5FA]">SND.NXT: 7719 [MSS: 512B]</div>
-                    <div className="text-[#FB923C]">RCV.NXT: 7419 (Cumulative)</div>
-                    <div className="text-[#34D399]">RTT: 24.5ms (Adaptive)</div>
+                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B]">
+                    <div className="text-[#2563EB] font-bold">SND.NXT: 7719 [MSS: 512B]</div>
+                    <div className="text-[#EA580C] font-bold">RCV.NXT: 7419 (Cumulative)</div>
+                    <div className="text-[#16A34A] font-bold">RTT: 24.5ms (Adaptive)</div>
                   </div>
                 </div>
               </div>
@@ -516,7 +497,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
           </div>
 
           <div className="p-8 md:p-10 flex flex-col items-center gap-4">
-            <RetroPCMonitor type="happy" className="w-20 h-20 pixel-float" />
+            <MyComputerIcon className="w-16 h-16 pixel-float" />
             <div className="font-['Press_Start_2P'] text-[10px] text-[#2563EB]">
               READY TO TEST TCP SIMULATION?
             </div>
