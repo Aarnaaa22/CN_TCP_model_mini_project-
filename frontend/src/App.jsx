@@ -3,6 +3,7 @@ import { useSocket }              from './hooks/useSocket';
 import { simulationReducer, initialState } from './store/simulationStore';
 
 import LandingPage         from './components/LandingPage';
+import OverviewPage        from './components/OverviewPage';
 import Header              from './components/Header';
 import NetworkDiagram      from './components/NetworkDiagram';
 import ControlPanel        from './components/ControlPanel';
@@ -17,7 +18,9 @@ export default function App() {
   const [sim, dispatch]       = useReducer(simulationReducer, initialState);
   const [lastEventType, setLastEventType] = useState(null);
   const [showCompletion, setShowCompletion] = useState(false);
-  const [showLanding, setShowLanding]       = useState(true);
+  
+  // pageStage: 'landing' | 'overview' | 'simulation'
+  const [pageStage, setPageStage] = useState('landing');
 
   const handleEvent = useCallback((event) => {
     dispatch({ event });
@@ -36,17 +39,29 @@ export default function App() {
     }, 100);
   }
 
-  if (showLanding) {
-    return <LandingPage onStart={() => setShowLanding(false)} />;
+  // Stage 1: Landing Page
+  if (pageStage === 'landing') {
+    return <LandingPage onStart={() => setPageStage('overview')} />;
   }
 
+  // Stage 2: Overview & Concepts Page (Teammate's Page matched to theme)
+  if (pageStage === 'overview') {
+    return (
+      <OverviewPage
+        onLaunchSimulation={() => setPageStage('simulation')}
+        onBackToLanding={() => setPageStage('landing')}
+      />
+    );
+  }
+
+  // Stage 3: Live Interactive TCP Simulator Dashboard
   return (
-    <div className="min-h-screen bg-[#F7F4EA] text-[#1E293B] flex flex-col selection:bg-[#2563EB] selection:text-white">
-      {/* Header with Back to Landing Page button */}
+    <div className="min-h-screen bg-[#F7F4EA] text-[#1E293B] flex flex-col selection:bg-[#2563EB] selection:text-white font-['Pixelify_Sans']">
       <Header
         connected={connected}
         status={sim.status}
-        onShowLanding={() => setShowLanding(true)}
+        onShowLanding={() => setPageStage('landing')}
+        onShowOverview={() => setPageStage('overview')}
       />
 
       <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-4 flex flex-col gap-4">

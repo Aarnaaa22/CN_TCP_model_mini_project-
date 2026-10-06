@@ -1,4 +1,4 @@
-export default function Header({ connected, status, onShowLanding }) {
+export default function Header({ connected, status, onShowLanding, onShowOverview }) {
   const statusConfig = {
     IDLE:      { label: 'IDLE',      bg: 'bg-slate-200 text-slate-800 border-slate-700',  dot: 'bg-slate-500' },
     RUNNING:   { label: 'RUNNING',   bg: 'bg-blue-100 text-blue-900 border-blue-700',    dot: 'bg-blue-600 animate-ping' },
@@ -11,7 +11,7 @@ export default function Header({ connected, status, onShowLanding }) {
     <header className="sticky top-0 z-50 border-b-4 border-[#1E293B] bg-[#FFFDF5] shadow-[0_4px_0px_#1E293B]">
       <div className="retro-window-header px-4 py-1.5">
         <div className="flex items-center gap-2">
-          <span className="text-[#FACC15]">🕹️</span>
+          <span className="text-[#FACC15]">⚙️</span>
           <span>SYSTEM_OS_V2.0 :: TCP_MODEL_SIMULATION.EXE</span>
         </div>
         <div className="retro-window-controls">
@@ -24,7 +24,7 @@ export default function Header({ connected, status, onShowLanding }) {
       <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3.5">
           <div className="w-10 h-10 rounded-lg bg-[#2563EB] border-3 border-[#1E293B] flex items-center justify-center shadow-[3px_3px_0px_#1E293B]">
-            <span className="text-xl select-none">🖥️</span>
+            <span className="text-xl select-none">💻</span>
           </div>
           <div>
             <div className="flex items-center gap-2.5">
@@ -35,12 +35,21 @@ export default function Header({ connected, status, onShowLanding }) {
             </div>
             <p className="text-xs text-[#475569] font-['Pixelify_Sans'] font-semibold mt-0.5 flex items-center gap-2">
               <span>Packet Loss, Checksums & Error Recovery Visualizer</span>
-              <span className="text-[#EC4899] animate-bounce">♥</span>
+              <span className="text-[#EC4899] animate-bounce">✨</span>
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
+          {onShowOverview && (
+            <button
+              onClick={onShowOverview}
+              className="px-2.5 py-1 bg-blue-100 hover:bg-blue-200 text-[#1E293B] border-2 border-[#1E293B] rounded shadow-[2px_2px_0px_#1E293B] font-['Press_Start_2P'] text-[8px] cursor-pointer"
+            >
+              📘 THEORY & AIM
+            </button>
+          )}
+
           {onShowLanding && (
             <button
               onClick={onShowLanding}
