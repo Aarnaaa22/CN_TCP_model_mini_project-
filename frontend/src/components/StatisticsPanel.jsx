@@ -1,11 +1,11 @@
-/** StatisticsPanel.jsx — Live transfer statistics */
+/** StatisticsPanel.jsx — Live transfer statistics (Light Circuit theme) */
 
-function StatCard({ label, value, color = 'text-white', sub }) {
+function StatCard({ label, value, color = 'text-[#12131A]', sub }) {
   return (
-    <div className="bg-navy-700/60 border border-white/5 rounded-xl p-3 flex flex-col gap-1">
-      <div className="text-[10px] text-slate-500 uppercase tracking-wider">{label}</div>
+    <div className="bg-[#EEF2FA] border border-[#12131A]/08 rounded-xl p-3 flex flex-col gap-1 shadow-2xs">
+      <div className="text-[10px] text-[#5B6478] uppercase tracking-wider font-semibold">{label}</div>
       <div className={`text-xl font-bold font-mono ${color}`}>{value ?? '—'}</div>
-      {sub && <div className="text-[10px] text-slate-600">{sub}</div>}
+      {sub && <div className="text-[10px] text-[#5B6478]">{sub}</div>}
     </div>
   );
 }
@@ -30,31 +30,34 @@ export default function StatisticsPanel({ stats, totalPackets }) {
   const pct     = total > 0 ? Math.round((success / total) * 100) : 0;
 
   return (
-    <div className="card card-glow p-5">
-      <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
-        Transfer Statistics
-      </h2>
+    <div className="card card-glow p-5 bg-white">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-[#12131A]">
+          Transfer Statistics
+        </h2>
+        <span className="tag-badge">METRICS</span>
+      </div>
 
-      <div className="grid grid-cols-2 gap-2 mb-4">
-        <StatCard label="Total Packets"  value={total}           color="text-white" />
-        <StatCard label="Delivered"      value={success}         color="text-green-400" />
-        <StatCard label="Lost"           value={s.lostPackets   ?? 0} color="text-red-400" />
-        <StatCard label="Corrupted"      value={s.corruptedPackets ?? 0} color="text-amber-400" />
-        <StatCard label="Retransmits"    value={s.retransmissions ?? 0} color="text-purple-400" />
-        <StatCard label="Total Attmpts"  value={s.totalAttempts ?? 0} />
-        <StatCard label="Transfer Time"  value={fmtTime(s.transferTime)} />
-        <StatCard label="File Size"      value={fmtBytes(s.originalFileSize)} />
+      <div className="grid grid-cols-2 gap-2.5 mb-4">
+        <StatCard label="Total Packets"  value={total}           color="text-[#12131A]" />
+        <StatCard label="Delivered"      value={success}         color="text-[#0E8570]" />
+        <StatCard label="Lost"           value={s.lostPackets   ?? 0} color="text-red-600" />
+        <StatCard label="Corrupted"      value={s.corruptedPackets ?? 0} color="text-amber-600" />
+        <StatCard label="Retransmits"    value={s.retransmissions ?? 0} color="text-purple-700" />
+        <StatCard label="Total Attmpts"  value={s.totalAttempts ?? 0} color="text-[#12131A]" />
+        <StatCard label="Transfer Time"  value={fmtTime(s.transferTime)} color="text-[#4C7DFF]" />
+        <StatCard label="File Size"      value={fmtBytes(s.originalFileSize)} color="text-[#4C7DFF]" />
       </div>
 
       {/* Delivery progress bar */}
-      <div>
-        <div className="flex justify-between text-xs mb-1">
-          <span className="text-slate-400">Delivery Progress</span>
-          <span className="text-cyan-400 font-mono">{pct}%</span>
+      <div className="bg-[#EEF2FA] p-3.5 rounded-xl border border-[#12131A]/10">
+        <div className="flex justify-between text-xs mb-1.5">
+          <span className="text-[#5B6478] font-semibold">Delivery Progress</span>
+          <span className="text-[#0E8570] font-mono font-bold">{pct}%</span>
         </div>
-        <div className="w-full h-2 bg-navy-700 rounded-full overflow-hidden">
+        <div className="w-full h-2.5 bg-white rounded-full overflow-hidden border border-[#12131A]/10">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-green-500 transition-all duration-500"
+            className="h-full rounded-full bg-gradient-to-r from-[#4C7DFF] to-[#2FD6B4] transition-all duration-500 shadow-sm"
             style={{ width: `${pct}%` }}
           />
         </div>
@@ -64,10 +67,10 @@ export default function StatisticsPanel({ stats, totalPackets }) {
       {stats?.checksumVerified !== undefined && (
         <div className={`mt-3 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold ${
           stats.checksumVerified
-            ? 'bg-green-900/20 text-green-400 border border-green-500/30'
-            : 'bg-red-900/20   text-red-400   border border-red-500/30'
+            ? 'bg-[#2FD6B4]/18 text-[#0E8570] border border-[#2FD6B4]/40'
+            : 'bg-red-100       text-red-700   border border-red-300'
         }`}>
-          {stats.checksumVerified ? '✓ Final Checksum Verified' : '✗ Checksum Mismatch'}
+          {stats.checksumVerified ? '✓ Final File Integrity Verified' : '✗ Checksum Mismatch Detected'}
         </div>
       )}
     </div>

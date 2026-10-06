@@ -22,7 +22,7 @@
 
 import { useReducer, useCallback, useState } from 'react';
 import { useSocket }              from './hooks/useSocket';
-import { simulationReducer, initialState, SIMULATION_STATUS } from './store/simulationStore';
+import { simulationReducer, initialState } from './store/simulationStore';
 
 import Header              from './components/Header';
 import NetworkDiagram      from './components/NetworkDiagram';
@@ -50,12 +50,6 @@ export default function App() {
 
   const { connected, emit } = useSocket(handleEvent);
 
-  function handleReset() {
-    dispatch({ event: { type: '__RESET__' } });
-    setLastEventType(null);
-    setShowCompletion(false);
-  }
-
   // Custom reset action that clears state
   function fullReset() {
     // We dispatch a synthetic reset by re-initializing
@@ -66,7 +60,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-navy-950 text-slate-200 flex flex-col">
+    <div className="min-h-screen bg-[#E6EAF5] text-[#12131A] flex flex-col selection:bg-[#4C7DFF] selection:text-white">
       {/* ── Header ──────────────────────────────────────────── */}
       <Header connected={connected} status={sim.status} />
 
@@ -74,9 +68,9 @@ export default function App() {
       <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-4 flex flex-col gap-4">
         {/* ── Disconnected warning ─────────────────────────── */}
         {!connected && (
-          <div className="bg-red-900/30 border border-red-500/40 rounded-xl px-5 py-3 text-sm text-red-400 flex items-center gap-2">
+          <div className="bg-[#141A2E] border border-red-500/40 rounded-xl px-5 py-3 text-sm text-red-400 flex items-center gap-2 shadow-lg">
             <span>⚠</span>
-            <span>Backend disconnected. Make sure the backend server is running.</span>
+            <span>Backend disconnected. Make sure the backend server is running on port 5000.</span>
           </div>
         )}
 

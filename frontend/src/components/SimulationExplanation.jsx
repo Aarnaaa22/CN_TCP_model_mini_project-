@@ -1,8 +1,7 @@
 /**
- * SimulationExplanation.jsx
+ * SimulationExplanation.jsx (Light Circuit theme)
  *
  * Dynamic plain-English explanation of the current simulation event.
- * Updates with each backend event — great for viva/demo explanation.
  */
 
 const EVENT_ICON = {
@@ -38,17 +37,21 @@ export default function SimulationExplanation({ explanation, lastEventType }) {
   const isWarning = lastEventType === 'TIMEOUT' || lastEventType === 'RETRANSMISSION';
 
   return (
-    <div className={`card p-5 border transition-all duration-500 ${
-      isError   ? 'border-red-500/30'    :
-      isSuccess ? 'border-green-500/30'  :
-      isWarning ? 'border-amber-500/30'  :
-      'border-white/5'
+    <div className={`card card-glow p-4.5 border transition-all duration-300 bg-white ${
+      isError   ? 'border-red-300 bg-red-50/50'     :
+      isSuccess ? 'border-[#2FD6B4]/60 bg-[#2FD6B4]/5' :
+      isWarning ? 'border-amber-300 bg-amber-50/50' :
+      'border-[#12131A]/10'
     }`}>
-      <p className={`text-sm leading-relaxed fade-in ${
-        isError   ? 'text-red-300'   :
-        isSuccess ? 'text-green-300' :
-        isWarning ? 'text-amber-300' :
-        'text-slate-300'
+      <div className="flex items-center justify-between mb-2">
+        <span className="tag-badge">TCP EXPLANATION</span>
+        <span className="text-base">{icon}</span>
+      </div>
+      <p className={`text-xs leading-relaxed fade-in font-medium ${
+        isError   ? 'text-red-700'       :
+        isSuccess ? 'text-[#0E8570]'     :
+        isWarning ? 'text-amber-800'     :
+        'text-[#12131A]'
       }`}>
         {explanation}
       </p>
