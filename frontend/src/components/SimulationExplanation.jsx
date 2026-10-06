@@ -1,29 +1,23 @@
-/**
- * SimulationExplanation.jsx (Light Circuit theme)
- *
- * Dynamic plain-English explanation of the current simulation event.
- */
-
 const EVENT_ICON = {
   TRANSFER_STARTED:   '🚀',
   PACKET_CREATED:     '📦',
-  PACKET_SENT:        '→',
-  IN_TRANSIT:         '↝',
-  PACKET_LOST:        '✗',
-  PACKET_CORRUPTED:   '⚠',
-  CHECKSUM_FAILED:    '🔍',
-  PACKET_RECEIVED:    '✓',
-  ACK_SENT:           '◀',
-  ACK_RECEIVED:       '✓✓',
-  TIMEOUT:            '⏱',
-  RETRANSMISSION:     '↺',
-  FILE_REASSEMBLED:   '🔧',
-  TRANSFER_COMPLETED: '🎉',
+  PACKET_SENT:        '📤',
+  IN_TRANSIT:         '📡',
+  PACKET_LOST:        '💥',
+  PACKET_CORRUPTED:   '👾',
+  CHECKSUM_FAILED:    '⚠️',
+  PACKET_RECEIVED:    '📥',
+  ACK_SENT:           '✉️',
+  ACK_RECEIVED:       '✅',
+  TIMEOUT:            '⏳',
+  RETRANSMISSION:     '🔄',
+  FILE_REASSEMBLED:   '📂',
+  TRANSFER_COMPLETED: '🏆',
   TRANSFER_FAILED:    '❌',
 };
 
 export default function SimulationExplanation({ explanation, lastEventType }) {
-  const icon = EVENT_ICON[lastEventType] || '📡';
+  const icon = EVENT_ICON[lastEventType] || '📦';
 
   const isError = lastEventType === 'PACKET_LOST'     ||
                   lastEventType === 'PACKET_CORRUPTED' ||
@@ -37,24 +31,36 @@ export default function SimulationExplanation({ explanation, lastEventType }) {
   const isWarning = lastEventType === 'TIMEOUT' || lastEventType === 'RETRANSMISSION';
 
   return (
-    <div className={`card card-glow p-4.5 border transition-all duration-300 bg-white ${
-      isError   ? 'border-red-300 bg-red-50/50'     :
-      isSuccess ? 'border-[#2FD6B4]/60 bg-[#2FD6B4]/5' :
-      isWarning ? 'border-amber-300 bg-amber-50/50' :
-      'border-[#12131A]/10'
+    <div className={`card retro-card border-3 transition-all duration-300 ${
+      isError   ? 'bg-rose-50 border-rose-600 text-rose-900'     :
+      isSuccess ? 'bg-emerald-50 border-emerald-600 text-emerald-900' :
+      isWarning ? 'bg-amber-50 border-amber-600 text-amber-900' :
+      'bg-[#FFFDF5] border-[#1E293B] text-[#1E293B]'
     }`}>
-      <div className="flex items-center justify-between mb-2">
-        <span className="tag-badge">TCP EXPLANATION</span>
-        <span className="text-base">{icon}</span>
+      <div className="retro-window-header">
+        <div className="flex items-center gap-2">
+          <span>💬</span>
+          <span>TCP_EXPLANATION.SYS</span>
+        </div>
+        <div className="retro-window-controls">
+          <div className="retro-win-btn retro-win-btn-min">_</div>
+          <div className="retro-win-btn retro-win-btn-max">□</div>
+          <div className="retro-win-btn retro-win-btn-close">X</div>
+        </div>
       </div>
-      <p className={`text-xs leading-relaxed fade-in font-medium ${
-        isError   ? 'text-red-700'       :
-        isSuccess ? 'text-[#0E8570]'     :
-        isWarning ? 'text-amber-800'     :
-        'text-[#12131A]'
-      }`}>
-        {explanation}
-      </p>
+
+      <div className="p-4 flex items-start gap-3">
+        <span className="text-2xl select-none">{icon}</span>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="tag-badge">TCP ENGINE</span>
+            <span className="text-[8px] font-['Press_Start_2P'] uppercase">{lastEventType || 'IDLE'}</span>
+          </div>
+          <p className="text-xs font-['Pixelify_Sans'] leading-relaxed font-semibold">
+            {explanation || 'Select a file payload and click START SIMULATION to observe TCP packet stream in real time.'}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

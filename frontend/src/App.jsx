@@ -1,25 +1,3 @@
-/**
- * App.jsx — Root component.
- *
- * Wires together:
- *  - useSocket (real-time events from backend)
- *  - simulationReducer (central state)
- *  - All UI components
- *
- * Layout:
- *  Header
- *  ┌──────────────────────────────────────────────┐
- *  │  Control Panel  │  Network Diagram            │
- *  │                 │  Simulation Explanation      │
- *  │                 │  Checksum Panel              │
- *  └──────────────────────────────────────────────┘
- *  Packet Grid
- *  ┌──────────────────────────────────────────────┐
- *  │  Transmission Log  │  Statistics Panel        │
- *  └──────────────────────────────────────────────┘
- *  Completion overlay (modal)
- */
-
 import { useReducer, useCallback, useState } from 'react';
 import { useSocket }              from './hooks/useSocket';
 import { simulationReducer, initialState } from './store/simulationStore';
@@ -39,7 +17,6 @@ export default function App() {
   const [lastEventType, setLastEventType] = useState(null);
   const [showCompletion, setShowCompletion] = useState(false);
 
-  // Handle incoming WebSocket events
   const handleEvent = useCallback((event) => {
     dispatch({ event });
     setLastEventType(event.type);
@@ -50,34 +27,26 @@ export default function App() {
 
   const { connected, emit } = useSocket(handleEvent);
 
-  // Custom reset action that clears state
   function fullReset() {
-    // We dispatch a synthetic reset by re-initializing
     dispatch({ event: { type: 'TRANSFER_FAILED', message: 'Reset by user' } });
     setTimeout(() => {
-      window.location.reload(); // Simple full reset for college demo
+      window.location.reload();
     }, 100);
   }
 
   return (
-    <div className="min-h-screen bg-[#E6EAF5] text-[#12131A] flex flex-col selection:bg-[#4C7DFF] selection:text-white">
-      {/* ── Header ──────────────────────────────────────────── */}
+    <div className="min-h-screen bg-[#F7F4EA] text-[#1E293B] flex flex-col selection:bg-[#2563EB] selection:text-white">
       <Header connected={connected} status={sim.status} />
 
-      {/* ── Main content ────────────────────────────────────── */}
       <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-4 flex flex-col gap-4">
-        {/* ── Disconnected warning ─────────────────────────── */}
         {!connected && (
-          <div className="bg-[#141A2E] border border-red-500/40 rounded-xl px-5 py-3 text-sm text-red-400 flex items-center gap-2 shadow-lg">
-            <span>⚠</span>
-            <span>Backend disconnected. Make sure the backend server is running on port 5000.</span>
+          <div className="card retro-card bg-rose-100 border-3 border-rose-600 p-3 text-xs text-rose-900 font-['Press_Start_2P'] text-[9px] flex items-center gap-2">
+            <span>⚠️</span>
+            <span>BACKEND DISCONNECTED. ENSURE SERVER IS RUNNING ON PORT 5000.</span>
           </div>
         )}
 
-        {/* ── Main Layout: Naturally scrolling columns ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_320px] gap-4">
-          
-          {/* LEFT COLUMN: Controls */}
+        <div className="grid grid-cols-1 lg:grid-cols-[290px_1fr_320px] gap-4">
           <div className="flex flex-col gap-4">
             <ControlPanel
               status={sim.status}
@@ -87,7 +56,6 @@ export default function App() {
             />
           </div>
 
-          {/* CENTER COLUMN: Network + Packet Grid */}
           <div className="flex flex-col gap-4">
             <NetworkDiagram
               activePacket={sim.activePacket}
@@ -108,15 +76,12 @@ export default function App() {
             )}
           </div>
 
-          {/* RIGHT COLUMN: Checksum + Statistics */}
           <div className="flex flex-col gap-4">
             <ChecksumPanel event={sim.lastChecksumEvent} />
             <StatisticsPanel stats={sim.stats} totalPackets={sim.totalPackets} />
           </div>
-
         </div>
 
-        {/* ── Bottom Full-Width Log ── */}
         <div className="h-80 w-full mt-2">
           <TransmissionLog events={sim.events} />
         </div>

@@ -1,54 +1,61 @@
-/** Header.jsx — Top bar with title, connection badge, and simulation status (Light Circuit theme) */
 export default function Header({ connected, status }) {
   const statusConfig = {
-    IDLE:      { label: 'Idle',      color: 'text-[#5B6478]',  dot: 'bg-[#5B6478]' },
-    RUNNING:   { label: 'Running',   color: 'text-[#4C7DFF]',  dot: 'bg-[#4C7DFF] animate-pulse shadow-[0_0_8px_#4C7DFF]' },
-    COMPLETED: { label: 'Completed', color: 'text-[#0E8570]',  dot: 'bg-[#2FD6B4] shadow-[0_0_6px_#2FD6B4]' },
-    FAILED:    { label: 'Failed',    color: 'text-red-500',    dot: 'bg-red-500' },
+    IDLE:      { label: 'IDLE',      bg: 'bg-slate-200 text-slate-800 border-slate-700',  dot: 'bg-slate-500' },
+    RUNNING:   { label: 'RUNNING',   bg: 'bg-blue-100 text-blue-900 border-blue-700',    dot: 'bg-blue-600 animate-ping' },
+    COMPLETED: { label: 'COMPLETED', bg: 'bg-emerald-100 text-emerald-900 border-emerald-700', dot: 'bg-emerald-600' },
+    FAILED:    { label: 'FAILED',    bg: 'bg-rose-100 text-rose-900 border-rose-700',      dot: 'bg-rose-600' },
   };
   const s = statusConfig[status] || statusConfig.IDLE;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#12131A]/10 bg-white/95 backdrop-blur-md shadow-sm">
-      <div className="max-w-[1600px] mx-auto px-6 py-3.5 flex items-center justify-between">
-        {/* Brand */}
+    <header className="sticky top-0 z-50 border-b-4 border-[#1E293B] bg-[#FFFDF5] shadow-[0_4px_0px_#1E293B]">
+      <div className="retro-window-header px-4 py-1.5">
+        <div className="flex items-center gap-2">
+          <span className="text-[#FACC15]">🕹️</span>
+          <span>SYSTEM_OS_V2.0 :: TCP_PROTOCOL_SIMULATOR.EXE</span>
+        </div>
+        <div className="retro-window-controls">
+          <div className="retro-win-btn retro-win-btn-min">_</div>
+          <div className="retro-win-btn retro-win-btn-max">□</div>
+          <div className="retro-win-btn retro-win-btn-close">X</div>
+        </div>
+      </div>
+
+      <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#4C7DFF] to-[#2FD6B4] flex items-center justify-center shadow-md shadow-[#4C7DFF]/25">
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2}
-                d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
+          <div className="w-10 h-10 rounded-lg bg-[#2563EB] border-3 border-[#1E293B] flex items-center justify-center shadow-[3px_3px_0px_#1E293B]">
+            <span className="text-xl select-none">🖥️</span>
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-base font-bold text-[#12131A] tracking-tight leading-none">TCP Reliable File Transfer</h1>
-              <span className="tag-badge hidden sm:inline-flex">CIRCUIT</span>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-sm sm:text-base font-bold text-[#1E293B] font-['Press_Start_2P'] tracking-tight">
+                TCP RELIABLE TRANSFER
+              </h1>
+              <span className="tag-badge">PIXEL-OS</span>
             </div>
-            <p className="text-xs text-[#5B6478] mt-0.5">Packet Loss, Checksums & Error Recovery Simulation</p>
+            <p className="text-xs text-[#475569] font-['Pixelify_Sans'] font-semibold mt-0.5 flex items-center gap-2">
+              <span>Packet Loss, Checksums & Error Recovery Simulation</span>
+              <span className="text-[#EC4899] animate-bounce">♥</span>
+            </p>
           </div>
         </div>
 
-        {/* Status indicators */}
-        <div className="flex items-center gap-4">
-          {/* Simulation status */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-[#5B6478] uppercase tracking-wider font-semibold text-[10px]">Simulation</span>
-            <div className="flex items-center gap-1.5 bg-[#EEF2FA] px-3 py-1 rounded-full border border-[#12131A]/10">
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 bg-[#F1F5F9] px-3 py-1.5 rounded-md border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B]">
+            <span className="text-[9px] font-['Press_Start_2P'] text-[#64748B]">SIM:</span>
+            <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded border text-[8px] font-['Press_Start_2P'] ${s.bg}`}>
               <span className={`w-2 h-2 rounded-full ${s.dot}`} />
-              <span className={`text-xs font-semibold ${s.color}`}>{s.label}</span>
+              <span>{s.label}</span>
             </div>
           </div>
 
-          <div className="w-px h-5 bg-[#12131A]/10" />
-
-          {/* Connection status */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-[#5B6478] uppercase tracking-wider font-semibold text-[10px]">Network</span>
-            <div className="flex items-center gap-1.5 bg-[#EEF2FA] px-3 py-1 rounded-full border border-[#12131A]/10">
-              <span className={`w-2 h-2 rounded-full ${connected ? 'bg-[#2FD6B4] animate-pulse shadow-[0_0_6px_#2FD6B4]' : 'bg-red-500'}`} />
-              <span className={`text-xs font-semibold ${connected ? 'text-[#0E8570]' : 'text-red-500'}`}>
-                {connected ? 'Connected' : 'Disconnected'}
-              </span>
+          <div className="flex items-center gap-2 bg-[#F1F5F9] px-3 py-1.5 rounded-md border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B]">
+            <span className="text-[9px] font-['Press_Start_2P'] text-[#64748B]">NET:</span>
+            <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded border text-[8px] font-['Press_Start_2P'] ${
+              connected ? 'bg-emerald-100 text-emerald-900 border-emerald-700' : 'bg-rose-100 text-rose-900 border-rose-700'
+            }`}>
+              <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-600 animate-pulse' : 'bg-rose-600'}`} />
+              <span>{connected ? 'CONNECTED' : 'DISCONNECTED'}</span>
             </div>
           </div>
         </div>

@@ -1,17 +1,11 @@
-/**
- * CompletionPanel.jsx (Light Circuit theme)
- *
- * Full-screen-style overlay shown when TRANSFER_COMPLETED event fires.
- */
-
 function fmtBytes(b) {
-  if (!b) return '—';
+  if (!b) return '0 B';
   if (b < 1024) return `${b} B`;
   if (b < 1048576) return `${(b / 1024).toFixed(1)} KB`;
   return `${(b / 1048576).toFixed(2)} MB`;
 }
 function fmtTime(ms) {
-  if (!ms) return '—';
+  if (!ms) return '0 ms';
   if (ms < 1000) return `${ms} ms`;
   return `${(ms / 1000).toFixed(2)} s`;
 }
@@ -21,74 +15,69 @@ export default function CompletionPanel({ completion, onReset, onClose }) {
   const s = completion.stats || {};
 
   return (
-    <div className="card border-2 border-[#2FD6B4] shadow-2xl shadow-[#2FD6B4]/20 w-full p-6 text-center fade-in bg-white">
-
-      {/* Success icon */}
-      <div className="w-12 h-12 rounded-full bg-[#2FD6B4]/15 border-2 border-[#2FD6B4]
-        flex items-center justify-center mx-auto mb-2 shadow-sm">
-        <span className="text-2xl text-[#0E8570] font-bold">✓</span>
-      </div>
-
-      <h2 className="text-xl font-bold text-[#12131A] mb-1">File Transfer Completed</h2>
-      <p className="text-[#5B6478] text-xs mb-3 font-medium">All packets were successfully transmitted, acknowledged, and reassembled.</p>
-
-      {/* Progress bar */}
-      <div className="w-full h-2 bg-[#EEF2FA] rounded-full overflow-hidden mb-4 border border-[#12131A]/10">
-        <div className="h-full rounded-full bg-gradient-to-r from-[#4C7DFF] to-[#2FD6B4] w-full" />
-      </div>
-
-      {/* Stats grid */}
-      <div className="grid grid-cols-3 gap-2.5 mb-4 text-left">
-        {[
-          { label: 'Original Size',       value: fmtBytes(s.originalFileSize) },
-          { label: 'Reconstructed Size',  value: fmtBytes(s.reconstructedFileSize) },
-          { label: 'Transfer Time',       value: fmtTime(s.transferTime) },
-          { label: 'Total Packets',       value: s.totalPackets },
-          { label: 'Retransmissions',     value: s.retransmissions },
-          { label: 'Total Attempts',      value: s.totalAttempts },
-        ].map(({ label, value }) => (
-          <div key={label} className="bg-[#EEF2FA] border border-[#12131A]/08 rounded-xl p-2.5">
-            <div className="text-[10px] text-[#5B6478] mb-0.5 uppercase tracking-wider font-semibold">{label}</div>
-            <div className="text-xs font-bold text-[#12131A] font-mono">{value}</div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+      <div className="card retro-card border-4 border-[#1E293B] shadow-[8px_8px_0px_#1E293B] max-w-lg w-full bg-[#FFFDF5] animate-bounce-short">
+        <div className="retro-window-header bg-emerald-600">
+          <div className="flex items-center gap-2">
+            <span>🏆</span>
+            <span>TRANSFER_COMPLETED.EXE</span>
           </div>
-        ))}
-      </div>
+          <div className="retro-window-controls">
+            <button onClick={onClose} className="retro-win-btn retro-win-btn-close">X</button>
+          </div>
+        </div>
 
-      {/* Checksum verified */}
-      <div className={`flex items-center justify-center gap-2 py-2 rounded-xl mb-4 text-xs font-bold tracking-wide uppercase ${
-        s.checksumVerified
-          ? 'bg-[#2FD6B4]/20 text-[#0E8570] border border-[#2FD6B4]/50 shadow-xs'
-          : 'bg-red-100       text-red-700   border border-red-300'
-      }`}>
-        {s.checksumVerified ? '✓ Checksum Verified (Integrity Confirmed)' : '✗ Checksum Mismatch'}
-      </div>
+        <div className="p-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-emerald-100 border-3 border-[#1E293B] flex items-center justify-center mx-auto mb-3 shadow-[3px_3px_0px_#1E293B] text-3xl">
+            🏆
+          </div>
 
-      {/* Actions */}
-      <div className="flex gap-2.5">
-        <button
-          onClick={onClose}
-          className="flex-1 py-2 rounded-xl border border-[#12131A]/14 text-[#5B6478]
-            text-xs font-semibold hover:bg-[#EEF2FA] hover:text-[#12131A] transition-all cursor-pointer"
-        >
-          ✕ Close
-        </button>
-        <button
-          onClick={() => {
-            onClose();
-            window.dispatchEvent(new Event('replayTransfer'));
-          }}
-          className="flex-1 py-2 rounded-xl bg-[#4C7DFF] hover:bg-[#3B6BE8] text-white font-semibold
-            text-xs transition-all shadow-md shadow-[#4C7DFF]/25 cursor-pointer"
-        >
-          ▶ Replay
-        </button>
-        <button
-          onClick={onReset}
-          className="flex-1 py-2 rounded-xl border border-[#2FD6B4] text-[#0E8570] font-semibold
-            text-xs hover:bg-[#2FD6B4]/15 transition-all shadow-xs cursor-pointer"
-        >
-          ↺ Reset
-        </button>
+          <h2 className="text-base font-bold text-[#1E293B] font-['Press_Start_2P'] mb-2">
+            FILE TRANSFER COMPLETE!
+          </h2>
+          <p className="text-xs text-[#475569] font-['Pixelify_Sans'] font-semibold mb-4">
+            All packets were successfully transmitted, acknowledged, and reassembled on Server B.
+          </p>
+
+          <div className="grid grid-cols-2 gap-2 mb-4 text-left">
+            {[
+              { label: 'Original Size',       value: fmtBytes(s.originalFileSize) },
+              { label: 'Reconstructed Size',  value: fmtBytes(s.reconstructedFileSize) },
+              { label: 'Transfer Time',       value: fmtTime(s.transferTime) },
+              { label: 'Total Packets',       value: s.totalPackets },
+              { label: 'Retransmissions',     value: s.retransmissions },
+              { label: 'Total Attempts',      value: s.totalAttempts },
+            ].map(({ label, value }) => (
+              <div key={label} className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-2 shadow-[2px_2px_0px_#1E293B]">
+                <div className="text-[7px] font-['Press_Start_2P'] text-[#64748B] uppercase">{label}</div>
+                <div className="text-xs font-bold text-[#1E293B] font-['Press_Start_2P'] mt-0.5">{value}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className={`p-2.5 rounded border-2 text-[9px] font-['Press_Start_2P'] mb-4 ${
+            s.checksumVerified
+              ? 'bg-emerald-100 text-emerald-900 border-emerald-700'
+              : 'bg-rose-100 text-rose-900 border-rose-700'
+          }`}>
+            {s.checksumVerified ? '✅ CHECKSUM VERIFIED (100% INTEGRITY)' : '❌ CHECKSUM MISMATCH'}
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={onClose}
+              className="btn-pixel btn-pixel-secondary flex-1 py-2 text-[9px]"
+            >
+              CLOSE
+            </button>
+            <button
+              onClick={onReset}
+              className="btn-pixel btn-pixel-primary flex-1 py-2 text-[9px]"
+            >
+              REPLAY SIMULATION
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

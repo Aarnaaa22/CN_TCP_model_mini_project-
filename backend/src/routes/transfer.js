@@ -22,20 +22,28 @@ const {
 
 const { getConfig, updateConfig, resetConfig } = require('../config/simulationConfig');
 
-// ── Multer: store uploaded files in memory (no disk I/O needed for simulation)
+// Store uploaded files in memory (no disk I/O needed for simulation)
 const storage = multer.memoryStorage();
 const upload  = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB max
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
+// Middleware wrapper to handle Multer upload errors gracefully
+const handleUpload = (req, res, next) => {
+  upload.single('file')(req, res, (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ success: false, message: 'File is too large. Maximum allowed size is 50MB.' });
+      }
+      return res.status(400).json({ success: false, message: `Upload error: ${err.message}` });
+    }
+    next();
+  });
+};
+
 // POST /api/transfer/start
-// Start a new file transfer simulation.
-// Body: multipart/form-data with field "file"
-// Optional JSON field "errorInjections": [{ packetNumber, errorType }]
-// ─────────────────────────────────────────────────────────────────────────────
-router.post('/start', upload.single('file'), async (req, res) => {
+router.post('/start', handleUpload, async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded.' });
@@ -51,13 +59,13 @@ router.post('/start', upload.single('file'), async (req, res) => {
       }
     }
 
-    // Also include any pre-stored injections from /inject-error calls
+    // Include any pre-stored injections from /inject-error calls
     const pending = getPendingInjections();
     errorInjections = [...pending, ...errorInjections];
 
     const { buffer, originalname, size } = req.file;
 
-    // Respond immediately — the simulation runs asynchronously
+    // Respond immediately - the simulation runs asynchronously
     res.json({
       success:     true,
       message:     `Transfer started for "${originalname}"`,
@@ -66,7 +74,7 @@ router.post('/start', upload.single('file'), async (req, res) => {
       errorInjections,
     });
 
-    // Start the simulation in the background (don't await — runs async)
+    // Start simulation in background
     startTransfer(buffer, originalname, errorInjections).catch(err => {
       console.error('[Transfer] Error during transfer:', err.message);
     });
@@ -76,63 +84,35 @@ router.post('/start', upload.single('file'), async (req, res) => {
   }
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 // POST /api/transfer/stop
-// Stop the currently running simulation.
-// ─────────────────────────────────────────────────────────────────────────────
 router.post('/stop', (req, res) => {
   stopTransfer();
   res.json({ success: true, message: 'Transfer stopped.' });
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 // POST /api/transfer/reset
-// Reset the simulation state so a new transfer can be started.
-// ─────────────────────────────────────────────────────────────────────────────
 router.post('/reset', (req, res) => {
   resetTransfer();
   resetConfig();
   res.json({ success: true, message: 'Simulation reset to initial state.' });
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 // GET /api/transfer/status
-// Get the current simulation status and statistics.
-// ─────────────────────────────────────────────────────────────────────────────
 router.get('/status', (req, res) => {
   res.json({ success: true, status: getStatus() });
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 // GET /api/transfer/packets
-// Get all packets and their current state.
-// ─────────────────────────────────────────────────────────────────────────────
 router.get('/packets', (req, res) => {
   res.json({ success: true, packets: getPackets() });
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 // GET /api/transfer/config
-// Get current simulation config.
-// ─────────────────────────────────────────────────────────────────────────────
 router.get('/config', (req, res) => {
   res.json({ success: true, config: getConfig() });
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 // POST /api/transfer/config
-// Update simulation settings before starting.
-//
-// Body (JSON):
-// {
-//   "packetLossProbability":       0.2,
-//   "packetCorruptionProbability": 0.1,
-//   "transmissionDelay":           300,
-//   "timeoutDuration":             1000,
-//   "maxRetries":                  5,
-//   "packetSize":                  512
-// }
-// ─────────────────────────────────────────────────────────────────────────────
 router.post('/config', (req, res) => {
   const allowed = [
     'packetLossProbability',
@@ -150,7 +130,6 @@ router.post('/config', (req, res) => {
 
   updateConfig(updates);
   
-  // Broadcast config update to clients so they can adjust animation instantly
   const { simEvents } = require('../services/transferService');
   simEvents.emit('event', {
     type: 'CONFIG_UPDATED',
@@ -161,16 +140,7 @@ router.post('/config', (req, res) => {
   res.json({ success: true, message: 'Config updated.', config: getConfig() });
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 // POST /api/transfer/inject-error
-// Manually mark a specific packet as LOST or CORRUPTED.
-//
-// Body (JSON):
-// {
-//   "packetNumber": 3,
-//   "errorType": "LOST"     // or "CORRUPTED"
-// }
-// ─────────────────────────────────────────────────────────────────────────────
 router.post('/inject-error', (req, res) => {
   const { packetNumber, errorType } = req.body;
 
