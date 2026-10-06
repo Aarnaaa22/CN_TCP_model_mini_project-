@@ -175,10 +175,10 @@ body {
 }
 
 .packet-traveling-right {
-  animation: travel-right 1.2s steps(20, end) forwards;
+  animation: travel-right 2.5s ease-in-out forwards;
 }
 .packet-traveling-left {
-  animation: travel-left 0.8s steps(15, end) forwards;
+  animation: travel-left 2.0s ease-in-out forwards;
 }
 .packet-lost-anim {
   animation: lost-burst 0.8s ease-out forwards;

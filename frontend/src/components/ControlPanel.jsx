@@ -34,7 +34,7 @@ export default function ControlPanel({ status, totalPackets, onReset, socketEmit
   const [pktSize, setPktSize] = useState(512);
   const [lossPct, setLossPct] = useState(0);
   const [crptPct, setCrptPct] = useState(0);
-  const [delay, setDelay] = useState(1200);
+  const [delay, setDelay] = useState(1800);
   const [timeout, setTimeout_] = useState(2500);
 
   const [injected, setInjected] = useState([]);
@@ -79,7 +79,7 @@ Packet 6: Transmission completion & SHA-256 integrity check.
     setFile(sampleFile);
     setFileMeta({ name: 'sample.txt', size: blob.size });
     setPktSize(512);
-    setDelay(1200);
+    setDelay(1800);
     setError(null);
   }
 
@@ -94,7 +94,7 @@ Packet 6: Transmission completion & SHA-256 integrity check.
     setFile(dummyFile);
     setFileMeta({ name: 'sample.txt', size: blob.size });
     setPktSize(512);
-    setDelay(1200);
+    setDelay(1800);
 
     if (presetType === 'NORMAL') {
       setLossPct(0);
@@ -248,7 +248,7 @@ Packet 6: Transmission completion & SHA-256 integrity check.
         {/* Timing & Delay */}
         <div className="flex flex-col gap-2">
           <label className="text-[9px] font-['Press_Start_2P'] text-[#1E293B] uppercase">Speed & Timing</label>
-          <Slider label="Transfer Delay (Slows Animation)" value={delay} min={400} max={3000} step={100}
+          <Slider label="Transfer Delay (Animation Pace)" value={delay} min={400} max={3000} step={100}
             onChange={v => {
               setDelay(v);
               if (isRunning) {

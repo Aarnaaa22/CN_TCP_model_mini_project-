@@ -75,7 +75,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
   useEffect(() => {
     const timer = setInterval(() => {
       manualPulseSegment();
-    }, 3500);
+    }, 6000);
     return () => clearInterval(timer);
   }, []);
 
