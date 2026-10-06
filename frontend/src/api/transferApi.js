@@ -1,10 +1,10 @@
 /**
  * transferApi.js
  * Centralized REST API calls to the backend.
- * All URLs are driven by VITE_API_URL env variable.
+ * All URLs are driven by VITE_API_URL env variable or resolve to relative path in production.
  */
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : '');
 
 async function apiFetch(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, options);
