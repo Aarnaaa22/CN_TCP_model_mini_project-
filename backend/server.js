@@ -62,8 +62,8 @@ app.get('/', (req, res) => {
 initSocketHandler(io);
 
 // ── Start Server (Local/Render) or Export (Vercel) ──────────────────────────
+const PORT = process.env.PORT || 5000;
 if (!process.env.VERCEL) {
-  const PORT = process.env.PORT || 5000;
   server.listen(PORT, () => {
     console.log('');
     console.log('╔════════════════════════════════════════════════════════╗');
@@ -75,4 +75,10 @@ if (!process.env.VERCEL) {
   });
 }
 
-module.exports = server;
+// Export Express app as main handler (for Vercel serverless), and attach server/io
+app.server = server;
+app.io = io;
+module.exports = app;
+module.exports.server = server;
+module.exports.io = io;
+

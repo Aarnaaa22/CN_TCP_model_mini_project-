@@ -13,9 +13,9 @@ const {
   startTransfer, 
   stopTransfer, 
   resetTransfer, 
-  updateConfig, 
   injectError 
 } = require('../services/transferService');
+const { updateConfig } = require('../config/simulationConfig');
 
 /**
  * Attach Socket.IO handlers to the server.
@@ -33,10 +33,11 @@ function initSocketHandler(io) {
     // Subscribe to simulation events
     simEvents.on('event', forwardEvent);
 
-    // REST-Replacement Event Handlers (Vercel Serverless Compatible)
+    // Event Handlers
     socket.on('start_transfer', (data) => {
+      if (!data) return;
       const { fileBuffer, fileName, errorInjections } = data;
-      startTransfer(Buffer.from(fileBuffer), fileName, errorInjections).catch(err => {
+      startTransfer(Buffer.from(fileBuffer), fileName || 'file.txt', errorInjections || []).catch(err => {
         console.error('[Transfer] Error during transfer:', err.message);
       });
     });
@@ -44,17 +45,26 @@ function initSocketHandler(io) {
     socket.on('stop_transfer', () => {
       stopTransfer();
     });
+    socket.on('stop_simulation', () => {
+      stopTransfer();
+    });
 
     socket.on('reset_transfer', () => {
       resetTransfer();
     });
+    socket.on('reset_simulation', () => {
+      resetTransfer();
+    });
 
     socket.on('update_config', (data) => {
-      const { transmissionDelay, timeoutDuration } = data;
-      updateConfig(transmissionDelay, timeoutDuration);
+      if (!data) return;
+      if (typeof data === 'object') {
+        updateConfig(data);
+      }
     });
 
     socket.on('inject_error', (data) => {
+      if (!data) return;
       const { packetNumber, errorType } = data;
       injectError(packetNumber, errorType);
     });

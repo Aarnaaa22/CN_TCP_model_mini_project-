@@ -70,10 +70,10 @@ export default function Header({ connected, status, onShowLanding, onShowOvervie
           <div className="flex items-center gap-2 bg-[#F1F5F9] px-3 py-1.5 rounded-md border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B]">
             <span className="text-[9px] font-['Press_Start_2P'] text-[#64748B]">NET:</span>
             <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded border text-[8px] font-['Press_Start_2P'] ${
-              connected ? 'bg-emerald-100 text-emerald-900 border-emerald-700' : 'bg-rose-100 text-rose-900 border-rose-700'
-            }`}>
-              <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-600 animate-pulse' : 'bg-rose-600'}`} />
-              <span>{connected ? 'CONNECTED' : 'DISCONNECTED'}</span>
+              connected ? 'bg-emerald-100 text-emerald-900 border-emerald-700' : 'bg-amber-100 text-amber-900 border-amber-700'
+            }`} title={connected ? 'Connected to Node.js backend server' : 'Running standalone client-side simulation engine'}>
+              <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-600 animate-pulse' : 'bg-amber-500'}`} />
+              <span>{connected ? 'CONNECTED' : 'STANDALONE'}</span>
             </div>
           </div>
         </div>

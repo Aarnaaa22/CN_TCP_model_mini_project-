@@ -66,9 +66,12 @@ export default function App() {
 
       <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-4 flex flex-col gap-4">
         {!connected && (
-          <div className="card retro-card bg-rose-100 border-3 border-rose-600 p-3 text-xs text-rose-900 font-['Press_Start_2P'] text-[9px] flex items-center gap-2">
-            <span>⚠️</span>
-            <span>BACKEND DISCONNECTED. ENSURE SERVER IS RUNNING ON PORT 5000.</span>
+          <div className="card retro-card bg-amber-50 border-3 border-amber-600 p-2.5 text-xs text-amber-950 font-['Pixelify_Sans'] flex items-center justify-between gap-3 shadow-[3px_3px_0px_#1E293B]">
+            <div className="flex items-center gap-2 font-bold text-xs">
+              <span className="text-base select-none">⚡</span>
+              <span>STANDALONE MODE ACTIVE: Backend offline. Full TCP simulation engine is running directly in your browser! (Start backend on port 5000 for live Socket.IO).</span>
+            </div>
+            <span className="text-[8px] font-['Press_Start_2P'] bg-amber-200 text-amber-900 px-2 py-1 rounded border border-amber-700 shrink-0">BROWSER-ENGINE</span>
           </div>
         )}
 
@@ -79,6 +82,8 @@ export default function App() {
               totalPackets={sim.totalPackets}
               onReset={fullReset}
               socketEmit={emit}
+              connected={connected}
+              onLocalEvent={handleEvent}
             />
           </div>
 

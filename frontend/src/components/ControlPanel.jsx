@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { startTransfer } from '../api/transferApi';
+import { startTransfer, updateConfig, stopTransfer } from '../api/transferApi';
+import { runBrowserSimulation, stopBrowserSimulation } from '../services/browserSimulationEngine';
 
 function Slider({ label, value, min, max, step, onChange, format, color = '#2563EB' }) {
   return (
@@ -24,7 +25,7 @@ function Slider({ label, value, min, max, step, onChange, format, color = '#2563
   );
 }
 
-export default function ControlPanel({ status, totalPackets, onReset, socketEmit }) {
+export default function ControlPanel({ status, totalPackets, onReset, socketEmit, connected, onLocalEvent }) {
   const [file, setFile] = useState(null);
   const [fileMeta, setFileMeta] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -118,20 +119,48 @@ Packet 6: Transmission completion & SHA-256 integrity check.
     setLoading(true);
     setError(null);
 
+    const config = {
+      packetLossProbability:       lossPct / 100,
+      packetCorruptionProbability: crptPct / 100,
+      transmissionDelay:           delay,
+      timeoutDuration:             timeout,
+      packetSize:                  pktSize,
+    };
+
+    // If connected to Node.js backend, try backend first
+    if (connected) {
+      try {
+        await updateConfig(config).catch(() => {});
+        await startTransfer(file, injected);
+        setLoading(false);
+        return;
+      } catch (err) {
+        console.warn('Backend transfer failed, falling back to browser simulation engine:', err);
+      }
+    }
+
+    // Standalone fallback: execute full TCP simulation directly in browser!
     try {
-      await startTransfer(file, injected);
       setLoading(false);
+      await runBrowserSimulation(file, injected, config, onLocalEvent);
     } catch (err) {
+      setError(err.message || 'Simulation error.');
+    } finally {
       setLoading(false);
-      setError(err.message || 'Failed to start simulation.');
     }
   }
 
   function handleStop() {
+    stopBrowserSimulation();
     socketEmit?.('stop_simulation');
+    socketEmit?.('stop_transfer');
+    stopTransfer().catch(() => {});
   }
 
   function handleReset() {
+    stopBrowserSimulation();
+    socketEmit?.('reset_simulation');
+    socketEmit?.('reset_transfer');
     setFile(null);
     setFileMeta(null);
     setInjected([]);
