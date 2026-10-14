@@ -60,7 +60,7 @@ function CDRomIcon({ className = "w-8 h-8" }) {
   );
 }
 
-export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
+export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onShowHandshake }) {
   const [seq, setSeq] = useState(7719);
   const [ack, setAck] = useState(7419);
   const [animKey, setAnimKey] = useState(0);
@@ -95,13 +95,21 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
             </div>
           </div>
 
-          <nav className="flex items-center gap-3 font-['Press_Start_2P'] text-[8px]">
+          <nav className="flex items-center gap-2 sm:gap-3 font-['Press_Start_2P'] text-[8px] flex-wrap">
             <button
               onClick={onBackToLanding}
               className="px-2.5 py-1.5 hover:bg-[#E2E8F0] rounded border border-transparent transition-colors cursor-pointer text-[#475569]"
             >
               LANDING
             </button>
+            {onShowHandshake && (
+              <button
+                onClick={onShowHandshake}
+                className="px-2.5 py-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-950 rounded border border-emerald-600 transition-colors cursor-pointer"
+              >
+                🤝 HANDSHAKE
+              </button>
+            )}
             <a
               href="#objective"
               className="px-2.5 py-1.5 hover:bg-[#E2E8F0] rounded border border-transparent transition-colors text-[#475569]"
@@ -177,6 +185,15 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
                 <span>EXPLORE SIMULATOR</span>
                 <span>▶</span>
               </button>
+              {onShowHandshake && (
+                <button
+                  onClick={onShowHandshake}
+                  className="btn-pixel bg-emerald-100 hover:bg-emerald-200 text-emerald-950 py-3.5 px-6 text-xs flex items-center gap-2 shadow-[4px_4px_0px_#1E293B]"
+                >
+                  <span>3-WAY HANDSHAKE</span>
+                  <span>🤝</span>
+                </button>
+              )}
               <a
                 href="#objective"
                 className="btn-pixel btn-pixel-secondary py-3.5 px-6 text-xs flex items-center gap-2 shadow-[4px_4px_0px_#1E293B]"
@@ -519,8 +536,11 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding }) {
 
         {/* FOOTER */}
         <footer className="text-center font-['Press_Start_2P'] text-[8px] text-[#64748B] pt-4 flex flex-col gap-2">
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-4 flex-wrap">
             <button onClick={onBackToLanding} className="hover:text-[#2563EB] cursor-pointer">Landing</button>
+            {onShowHandshake && (
+              <button onClick={onShowHandshake} className="hover:text-[#2563EB] cursor-pointer">Handshake 🤝</button>
+            )}
             <a href="#objective" className="hover:text-[#2563EB]">Aim</a>
             <a href="#concepts" className="hover:text-[#2563EB]">Concepts</a>
             <button onClick={onLaunchSimulation} className="hover:text-[#2563EB] cursor-pointer">Simulator ▶</button>

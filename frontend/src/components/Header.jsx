@@ -1,4 +1,4 @@
-export default function Header({ connected, status, onShowLanding, onShowOverview }) {
+export default function Header({ connected, status, onShowLanding, onShowHandshake, onShowOverview }) {
   const statusConfig = {
     IDLE:      { label: 'IDLE',      bg: 'bg-slate-200 text-slate-800 border-slate-700',  dot: 'bg-slate-500' },
     RUNNING:   { label: 'RUNNING',   bg: 'bg-blue-100 text-blue-900 border-blue-700',    dot: 'bg-blue-600 animate-ping' },
@@ -40,7 +40,16 @@ export default function Header({ connected, status, onShowLanding, onShowOvervie
           </div>
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          {onShowHandshake && (
+            <button
+              onClick={onShowHandshake}
+              className="px-2.5 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-950 border-2 border-[#1E293B] rounded shadow-[2px_2px_0px_#1E293B] font-['Press_Start_2P'] text-[8px] cursor-pointer"
+            >
+              🤝 3-WAY HANDSHAKE
+            </button>
+          )}
+
           {onShowOverview && (
             <button
               onClick={onShowOverview}

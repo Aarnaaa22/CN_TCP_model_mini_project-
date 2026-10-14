@@ -3,6 +3,7 @@ import { useSocket }              from './hooks/useSocket';
 import { simulationReducer, initialState } from './store/simulationStore';
 
 import LandingPage         from './components/LandingPage';
+import HandshakeSimulation from './components/HandshakeSimulation';
 import OverviewPage        from './components/OverviewPage';
 import Header              from './components/Header';
 import NetworkDiagram      from './components/NetworkDiagram';
@@ -19,7 +20,7 @@ export default function App() {
   const [lastEventType, setLastEventType] = useState(null);
   const [showCompletion, setShowCompletion] = useState(false);
   
-  // pageStage: 'landing' | 'overview' | 'simulation'
+  // pageStage: 'landing' | 'handshake' | 'overview' | 'simulation'
   const [pageStage, setPageStage] = useState('landing');
 
   const handleEvent = useCallback((event) => {
@@ -41,26 +42,39 @@ export default function App() {
 
   // Stage 1: Landing Page
   if (pageStage === 'landing') {
-    return <LandingPage onStart={() => setPageStage('overview')} />;
+    return <LandingPage onStart={() => setPageStage('handshake')} />;
   }
 
-  // Stage 2: Overview & Concepts Page (Teammate's Page matched to theme)
-  if (pageStage === 'overview') {
+  // Stage 2: Three-Way Handshake Simulation (Just after Landing Page)
+  if (pageStage === 'handshake') {
     return (
-      <OverviewPage
-        onLaunchSimulation={() => setPageStage('simulation')}
+      <HandshakeSimulation
+        onProceedToOverview={() => setPageStage('overview')}
+        onProceedToSimulation={() => setPageStage('simulation')}
         onBackToLanding={() => setPageStage('landing')}
       />
     );
   }
 
-  // Stage 3: Live Interactive TCP Simulator Dashboard
+  // Stage 3: Overview & Concepts Page
+  if (pageStage === 'overview') {
+    return (
+      <OverviewPage
+        onLaunchSimulation={() => setPageStage('simulation')}
+        onBackToLanding={() => setPageStage('landing')}
+        onShowHandshake={() => setPageStage('handshake')}
+      />
+    );
+  }
+
+  // Stage 4: Live Interactive TCP Simulator Dashboard
   return (
     <div className="min-h-screen bg-[#F7F4EA] text-[#1E293B] flex flex-col selection:bg-[#2563EB] selection:text-white font-['Pixelify_Sans']">
       <Header
         connected={connected}
         status={sim.status}
         onShowLanding={() => setPageStage('landing')}
+        onShowHandshake={() => setPageStage('handshake')}
         onShowOverview={() => setPageStage('overview')}
       />
 
