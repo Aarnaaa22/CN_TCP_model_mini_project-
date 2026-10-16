@@ -5,6 +5,7 @@ import { simulationReducer, initialState } from './store/simulationStore';
 import LandingPage         from './components/LandingPage';
 import HandshakeSimulation from './components/HandshakeSimulation';
 import OverviewPage        from './components/OverviewPage';
+import SlidingWindowPage   from './components/SlidingWindowPage';
 import Header              from './components/Header';
 import NetworkDiagram      from './components/NetworkDiagram';
 import ControlPanel        from './components/ControlPanel';
@@ -20,7 +21,7 @@ export default function App() {
   const [lastEventType, setLastEventType] = useState(null);
   const [showCompletion, setShowCompletion] = useState(false);
   
-  // pageStage: 'landing' | 'overview' | 'simulation'
+  // pageStage: 'landing' | 'overview' | 'simulation' | 'sliding-window'
   const [pageStage, setPageStage] = useState('landing');
   const [targetSection, setTargetSection] = useState(null);
 
@@ -58,6 +59,7 @@ export default function App() {
         initialSection="handshake"
         onLaunchSimulation={() => setPageStage('simulation')}
         onBackToLanding={() => setPageStage('landing')}
+        onProceedToSlidingWindow={() => setPageStage('sliding-window')}
       />
     );
   }
@@ -69,11 +71,23 @@ export default function App() {
         initialSection={targetSection}
         onLaunchSimulation={() => setPageStage('simulation')}
         onBackToLanding={() => setPageStage('landing')}
+        onProceedToSlidingWindow={() => setPageStage('sliding-window')}
       />
     );
   }
 
-  // Stage 4: Live Interactive TCP Simulator Dashboard
+  // Stage 4: Sliding Window Protocol Page (Aim, Theory & Interactive Simulation)
+  if (pageStage === 'sliding-window') {
+    return (
+      <SlidingWindowPage
+        onBackToLanding={() => setPageStage('landing')}
+        onBackToStopAndWait={() => setPageStage('overview')}
+        onLaunchSimulator={() => setPageStage('simulation')}
+      />
+    );
+  }
+
+  // Stage 5: Live Interactive TCP Simulator Dashboard (Stop-and-Wait Engine)
   return (
     <div className="min-h-screen bg-[#F7F4EA] text-[#1E293B] flex flex-col selection:bg-[#2563EB] selection:text-white font-['Pixelify_Sans']">
       <Header
@@ -82,6 +96,7 @@ export default function App() {
         onShowLanding={() => setPageStage('landing')}
         onShowHandshake={() => goToOverview('handshake')}
         onShowOverview={() => goToOverview('objective')}
+        onShowSlidingWindow={() => setPageStage('sliding-window')}
       />
 
       <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-4 flex flex-col gap-4">
@@ -123,6 +138,10 @@ export default function App() {
                 completion={sim.completion}
                 onReset={() => { setShowCompletion(false); fullReset(); }}
                 onClose={() => setShowCompletion(false)}
+                onProceedToSlidingWindow={() => {
+                  setShowCompletion(false);
+                  setPageStage('sliding-window');
+                }}
               />
             )}
           </div>

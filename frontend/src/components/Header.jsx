@@ -1,4 +1,4 @@
-export default function Header({ connected, status, onShowLanding, onShowHandshake, onShowOverview }) {
+export default function Header({ connected, status, onShowLanding, onShowHandshake, onShowOverview, onShowSlidingWindow }) {
   const statusConfig = {
     IDLE:      { label: 'IDLE',      bg: 'bg-slate-200 text-slate-800 border-slate-700',  dot: 'bg-slate-500' },
     RUNNING:   { label: 'RUNNING',   bg: 'bg-blue-100 text-blue-900 border-blue-700',    dot: 'bg-blue-600 animate-ping' },
@@ -56,6 +56,15 @@ export default function Header({ connected, status, onShowLanding, onShowHandsha
               className="px-2.5 py-1 bg-blue-100 hover:bg-blue-200 text-[#1E293B] border-2 border-[#1E293B] rounded shadow-[2px_2px_0px_#1E293B] font-['Press_Start_2P'] text-[8px] cursor-pointer"
             >
               📘 THEORY & AIM
+            </button>
+          )}
+
+          {onShowSlidingWindow && (
+            <button
+              onClick={onShowSlidingWindow}
+              className="px-2.5 py-1 bg-purple-100 hover:bg-purple-200 text-purple-950 border-2 border-[#1E293B] rounded shadow-[2px_2px_0px_#1E293B] font-['Press_Start_2P'] text-[8px] cursor-pointer font-bold"
+            >
+              🪟 SLIDING WINDOW
             </button>
           )}
 

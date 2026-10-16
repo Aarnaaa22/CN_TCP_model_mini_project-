@@ -10,7 +10,7 @@ function fmtTime(ms) {
   return `${(ms / 1000).toFixed(2)} s`;
 }
 
-export default function CompletionPanel({ completion, onReset, onClose }) {
+export default function CompletionPanel({ completion, onReset, onClose, onProceedToSlidingWindow }) {
   if (!completion) return null;
   const s = completion.stats || {};
 
@@ -63,19 +63,33 @@ export default function CompletionPanel({ completion, onReset, onClose }) {
             {s.checksumVerified ? '✅ CHECKSUM VERIFIED (100% INTEGRITY)' : '❌ CHECKSUM MISMATCH'}
           </div>
 
-          <div className="flex gap-2">
-            <button
-              onClick={onClose}
-              className="btn-pixel btn-pixel-secondary flex-1 py-2 text-[9px]"
-            >
-              CLOSE
-            </button>
-            <button
-              onClick={onReset}
-              className="btn-pixel btn-pixel-primary flex-1 py-2 text-[9px]"
-            >
-              REPLAY SIMULATION
-            </button>
+          <div className="flex flex-col gap-2.5">
+            {onProceedToSlidingWindow && (
+              <button
+                onClick={() => {
+                  onClose();
+                  onProceedToSlidingWindow();
+                }}
+                className="btn-pixel bg-[#2563EB] hover:bg-[#1D4ED8] text-white w-full py-3 text-[9px] shadow-[3px_3px_0px_#1E293B] flex items-center justify-center gap-2"
+              >
+                <span>🚀 PROCEED TO SLIDING WINDOW PROTOCOL</span>
+                <span>➔</span>
+              </button>
+            )}
+            <div className="flex gap-2">
+              <button
+                onClick={onClose}
+                className="btn-pixel btn-pixel-secondary flex-1 py-2 text-[9px]"
+              >
+                CLOSE
+              </button>
+              <button
+                onClick={onReset}
+                className="btn-pixel btn-pixel-primary flex-1 py-2 text-[9px]"
+              >
+                REPLAY SIMULATION
+              </button>
+            </div>
           </div>
         </div>
       </div>

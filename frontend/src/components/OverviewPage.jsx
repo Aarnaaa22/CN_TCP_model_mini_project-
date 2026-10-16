@@ -61,7 +61,7 @@ function CDRomIcon({ className = "w-8 h-8" }) {
   );
 }
 
-export default function OverviewPage({ onLaunchSimulation, onBackToLanding, initialSection = null }) {
+export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onProceedToSlidingWindow, initialSection = null }) {
   const [seq, setSeq] = useState(7719);
   const [ack, setAck] = useState(7419);
   const [animKey, setAnimKey] = useState(0);
@@ -135,6 +135,14 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, init
             >
               📘 THEORY & CONCEPTS
             </a>
+            {onProceedToSlidingWindow && (
+              <button
+                onClick={onProceedToSlidingWindow}
+                className="px-2.5 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-950 rounded border border-purple-600 transition-colors cursor-pointer font-bold"
+              >
+                🪟 SLIDING WINDOW
+              </button>
+            )}
             <button
               onClick={onLaunchSimulation}
               className="px-3 py-1.5 bg-[#5BA848] text-white rounded border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B] hover:bg-[#4D943B] active:translate-x-[1px] active:translate-y-[1px] cursor-pointer flex items-center gap-1.5"
@@ -210,6 +218,15 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, init
                 <span>3. THEORY & CONCEPTS</span>
                 <span>📘</span>
               </a>
+              {onProceedToSlidingWindow && (
+                <button
+                  onClick={onProceedToSlidingWindow}
+                  className="btn-pixel bg-purple-100 hover:bg-purple-200 text-purple-950 py-2.5 px-4 text-[9px] shadow-[3px_3px_0px_#1E293B] flex items-center gap-2 font-bold"
+                >
+                  <span>4. SLIDING WINDOW</span>
+                  <span>🪟</span>
+                </button>
+              )}
               <button
                 onClick={onLaunchSimulation}
                 className="btn-pixel btn-pixel-primary py-2.5 px-5 text-[9px] shadow-[3px_3px_0px_#1E293B] flex items-center gap-2 sm:ml-auto"
@@ -584,6 +601,48 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, init
           </div>
         </section>
 
+        {/* ========================================================================= */}
+        {/* SECTION 5: PROCEED TO SLIDING WINDOW PROTOCOL                             */}
+        {/* ========================================================================= */}
+        <section className="card retro-card overflow-hidden" id="sliding-window-cta">
+          <div className="retro-window-header bg-gradient-to-r from-[#1D4ED8] via-[#2563EB] to-[#7C3AED]">
+            <div className="flex items-center gap-2">
+              <span>🪟</span>
+              <span>WINDOW_05 :: SLIDING_WINDOW_PROTOCOL_UPGRADE.EXE</span>
+            </div>
+            <div className="retro-window-controls">
+              <div className="retro-win-btn retro-win-btn-min">_</div>
+              <div className="retro-win-btn retro-win-btn-max">□</div>
+              <div className="retro-win-btn retro-win-btn-close">X</div>
+            </div>
+          </div>
+
+          <div className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-[#EFF6FF] via-[#F8FAFC] to-[#FAF5FF]">
+            <div className="flex flex-col gap-3">
+              <div className="inline-flex items-center gap-2 bg-[#DBEAFE] border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B] px-3 py-1 rounded w-fit">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#2563EB] animate-ping"></span>
+                <span className="font-['Press_Start_2P'] text-[8px] text-[#1E40AF]">
+                  NEXT PROTOCOL EVOLUTION: PIPELINING
+                </span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#1E293B] font-['Pixelify_Sans']">
+                Proceed to Sliding Window Protocol
+              </h3>
+              <p className="text-base text-[#475569] max-w-[700px] leading-relaxed">
+                Stop-and-Wait only allows 1 packet at a time, severely limiting throughput. Upgrade to the <strong>Sliding Window Protocol</strong> to explore its dedicated <strong>Aim & Objectives</strong>, <strong>Efficiency Formulas (η = min(1, W/(1+2a)))</strong>, and an interactive <strong>Pipelined Simulator</strong> where you can manually adjust window size (W=1 to 8) and watch the window bracket slide in real time!
+              </p>
+            </div>
+
+            <button
+              onClick={onProceedToSlidingWindow}
+              className="btn-pixel bg-[#2563EB] hover:bg-[#1D4ED8] text-white py-4 px-6 text-xs flex items-center gap-3 shadow-[4px_4px_0px_#1E293B] shrink-0 active:translate-x-1 active:translate-y-1"
+            >
+              <span>PROCEED TO SLIDING WINDOW</span>
+              <span>➔</span>
+            </button>
+          </div>
+        </section>
+
         {/* FOOTER */}
         <footer className="text-center font-['Press_Start_2P'] text-[8px] text-[#64748B] pt-4 flex flex-col gap-2">
           <div className="flex justify-center gap-4 flex-wrap">
@@ -591,6 +650,9 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, init
             <a href="#handshake" className="hover:text-[#2563EB]">Handshake 🤝</a>
             <a href="#objective" className="hover:text-[#2563EB]">Aim</a>
             <a href="#concepts" className="hover:text-[#2563EB]">Concepts</a>
+            {onProceedToSlidingWindow && (
+              <button onClick={onProceedToSlidingWindow} className="hover:text-[#7C3AED] cursor-pointer">Sliding Window 🪟</button>
+            )}
             <button onClick={onLaunchSimulation} className="hover:text-[#2563EB] cursor-pointer">Simulator ▶</button>
           </div>
           <div>Computer Networks Project — TCP Flow & Error Control Simulator</div>
