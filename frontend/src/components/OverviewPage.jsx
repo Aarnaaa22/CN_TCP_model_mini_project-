@@ -90,7 +90,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onPr
         }
       }, 100);
     } else {
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      window.scrollTo({ top: 0, behavior: 'auto' });
     }
   }, [initialSection]);
 

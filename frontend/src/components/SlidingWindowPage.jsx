@@ -261,6 +261,14 @@ export default function SlidingWindowPage({ onBackToLanding, onBackToStopAndWait
     addLog('SIMULATOR RESET TO INITIAL STATE (WINDOW AT [0 .. ' + (windowSize - 1) + ']).', 'sys');
   }
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
+
   // Clean up on unmount
   useEffect(() => {
     return () => {
@@ -530,7 +538,7 @@ export default function SlidingWindowPage({ onBackToLanding, onBackToStopAndWait
                     Channel Utilization (η)
                   </h3>
                   <p className="text-sm text-[#475569] leading-relaxed mb-3">
-                    Let $T_{trans}$ be transmission time and $T_{prop}$ be propagation delay. Defining parameter $a = T_{prop} / T_{trans}$:
+                    Let T_trans be transmission time and T_prop be propagation delay. Defining parameter a = T_prop / T_trans:
                   </p>
                 </div>
                 <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B] space-y-1">
