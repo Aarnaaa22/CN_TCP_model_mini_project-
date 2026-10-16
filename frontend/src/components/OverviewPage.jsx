@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ThreeWayHandshakeSection from './ThreeWayHandshakeSection';
 
 // Classic Windows 95/98/XP Desktop SVG Icons
 function MyComputerIcon({ className = "w-8 h-8" }) {
@@ -60,7 +61,7 @@ function CDRomIcon({ className = "w-8 h-8" }) {
   );
 }
 
-export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onShowHandshake }) {
+export default function OverviewPage({ onLaunchSimulation, onBackToLanding, initialSection = null }) {
   const [seq, setSeq] = useState(7719);
   const [ack, setAck] = useState(7419);
   const [animKey, setAnimKey] = useState(0);
@@ -71,7 +72,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onSh
     setAnimKey(prev => prev + 1);
   }
 
-  // Auto-pulse packet stream animation every 3.5 seconds
+  // Auto-pulse packet stream animation every 6 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       manualPulseSegment();
@@ -79,12 +80,26 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onSh
     return () => clearInterval(timer);
   }, []);
 
+  // Handle smooth scroll when navigating to initialSection
+  useEffect(() => {
+    if (initialSection) {
+      setTimeout(() => {
+        const el = document.getElementById(initialSection);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [initialSection]);
+
   return (
     <div className="min-h-screen bg-[#F7F4EA] text-[#1E293B] font-['Pixelify_Sans'] selection:bg-[#2563EB] selection:text-white pb-12">
 
       {/* TOP RETRO OS TASKBAR / NAVIGATION */}
       <header className="sticky top-0 z-50 bg-[#FFFDF5] border-b-3 border-[#1E293B] shadow-[0_4px_0px_rgba(30,41,59,0.15)] py-2.5 mb-8">
-        <div className="max-w-[1200px] mx-auto px-4 flex flex-wrap justify-between items-center gap-4">
+        <div className="max-w-[1240px] mx-auto px-4 flex flex-wrap justify-between items-center gap-4">
           <div className="flex items-center gap-3 cursor-pointer" onClick={onBackToLanding}>
             <MyComputerIcon className="w-8 h-8" />
             <div className="px-2.5 py-1 bg-[#2563EB] text-white font-['Press_Start_2P'] text-[9px] border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B]">
@@ -100,27 +115,25 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onSh
               onClick={onBackToLanding}
               className="px-2.5 py-1.5 hover:bg-[#E2E8F0] rounded border border-transparent transition-colors cursor-pointer text-[#475569]"
             >
-              LANDING
+              🏠 LANDING
             </button>
-            {onShowHandshake && (
-              <button
-                onClick={onShowHandshake}
-                className="px-2.5 py-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-950 rounded border border-emerald-600 transition-colors cursor-pointer"
-              >
-                🤝 HANDSHAKE
-              </button>
-            )}
+            <a
+              href="#handshake"
+              className="px-2.5 py-1.5 bg-blue-100 hover:bg-blue-200 text-[#1D4ED8] rounded border border-blue-600 transition-colors cursor-pointer font-bold"
+            >
+              🤝 3-WAY HANDSHAKE
+            </a>
             <a
               href="#objective"
               className="px-2.5 py-1.5 hover:bg-[#E2E8F0] rounded border border-transparent transition-colors text-[#475569]"
             >
-              AIM & SPECS
+              📂 AIM & SPECS
             </a>
             <a
               href="#concepts"
               className="px-2.5 py-1.5 hover:bg-[#E2E8F0] rounded border border-transparent transition-colors text-[#475569]"
             >
-              CONCEPTS
+              📘 THEORY & CONCEPTS
             </a>
             <button
               onClick={onLaunchSimulation}
@@ -133,9 +146,9 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onSh
         </div>
       </header>
 
-      <main className="max-w-[1200px] mx-auto px-4 flex flex-col gap-10">
+      <main className="max-w-[1240px] mx-auto px-4 flex flex-col gap-10">
 
-        {/* HERO OS WINDOW */}
+        {/* HERO OS PROTOCOL BANNER */}
         <section className="card retro-card overflow-hidden">
           <div className="retro-window-header">
             <div className="flex items-center gap-2">
@@ -149,21 +162,24 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onSh
             </div>
           </div>
 
-          <div className="p-6 md:p-8 flex flex-col gap-6">
-
-            <div className="flex items-center gap-3">
-              <div className="inline-flex items-center gap-2 bg-[#E0F2FE] border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B] px-3 py-1.5 rounded w-fit">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] animate-ping"></span>
-                <span className="font-['Press_Start_2P'] text-[9px] text-[#0369A1]">
-                  COMPUTER NETWORKS • TCP PROTOCOL
-                </span>
-              </div>
-            </div>
-
+          <div className="p-6 md:p-8 flex flex-col gap-5">
             <div className="flex items-center justify-between">
-              <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[#1E293B] leading-tight font-['Pixelify_Sans']">
-                TCP <span className="text-[#2563EB] underline decoration-wavy decoration-[#F97316]">Flow & Error</span> Control
-              </h1>
+              <div className="flex flex-col gap-2">
+                <div className="inline-flex items-center gap-2 bg-[#E0F2FE] border-2 border-[#1E293B] shadow-[2px_2px_0px_#1E293B] px-3 py-1 rounded w-fit">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] animate-ping"></span>
+                  <span className="font-['Press_Start_2P'] text-[9px] text-[#0369A1]">
+                    COMPUTER NETWORKS • TCP PROTOCOL SUITE
+                  </span>
+                </div>
+                <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[#1E293B] leading-tight font-['Pixelify_Sans']">
+                  TCP <span className="text-[#2563EB] underline decoration-wavy decoration-[#F97316]">Flow & Error</span> Control
+                </h1>
+                <p className="text-base md:text-lg text-[#475569] max-w-[850px] leading-relaxed font-['Pixelify_Sans']">
+                  Explore how Transmission Control Protocol (TCP) ensures zero packet loss, avoids receiver buffer overflow, 
+                  and synchronizes sequence numbers from initial connection establishment to real-time file transfer.
+                </p>
+              </div>
+
               <div className="hidden md:flex items-center gap-3">
                 <NetworkGlobeIcon className="w-12 h-12" />
                 <CDRomIcon className="w-12 h-12" />
@@ -171,36 +187,257 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onSh
               </div>
             </div>
 
-            <p className="text-base md:text-lg text-[#475569] max-w-[850px] leading-relaxed font-['Pixelify_Sans']">
-              Visualize how Transmission Control Protocol (TCP) manages data flow, prevents receiver buffer overflow, 
-              and guarantees 100% reliable packet delivery using sequence numbers, ACKs, checksums, and adaptive retransmissions.
-            </p>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 my-2">
-              <button
-                onClick={onLaunchSimulation}
-                className="btn-pixel btn-pixel-primary py-3.5 px-6 text-xs flex items-center gap-2 shadow-[4px_4px_0px_#1E293B]"
+            {/* Quick-Jump Section Anchor Pills */}
+            <div className="flex flex-wrap items-center gap-3 pt-2 border-t-2 border-[#E2E8F0]">
+              <a
+                href="#handshake"
+                className="btn-pixel bg-[#2563EB] hover:bg-[#1D4ED8] text-white py-2.5 px-4 text-[9px] shadow-[3px_3px_0px_#1E293B] flex items-center gap-2"
               >
-                <span>EXPLORE SIMULATOR</span>
-                <span>▶</span>
-              </button>
-              {onShowHandshake && (
-                <button
-                  onClick={onShowHandshake}
-                  className="btn-pixel bg-emerald-100 hover:bg-emerald-200 text-emerald-950 py-3.5 px-6 text-xs flex items-center gap-2 shadow-[4px_4px_0px_#1E293B]"
-                >
-                  <span>3-WAY HANDSHAKE</span>
-                  <span>🤝</span>
-                </button>
-              )}
+                <span>1. THREE-WAY HANDSHAKE</span>
+                <span>🤝</span>
+              </a>
               <a
                 href="#objective"
-                className="btn-pixel btn-pixel-secondary py-3.5 px-6 text-xs flex items-center gap-2 shadow-[4px_4px_0px_#1E293B]"
+                className="btn-pixel bg-[#E2E8F0] hover:bg-slate-300 text-[#1E293B] py-2.5 px-4 text-[9px] shadow-[3px_3px_0px_#1E293B] flex items-center gap-2"
               >
-                <span>LEARN HOW TCP WORKS</span>
-                <span>📜</span>
+                <span>2. AIM & SPECS</span>
+                <span>📂</span>
               </a>
+              <a
+                href="#concepts"
+                className="btn-pixel bg-[#E2E8F0] hover:bg-slate-300 text-[#1E293B] py-2.5 px-4 text-[9px] shadow-[3px_3px_0px_#1E293B] flex items-center gap-2"
+              >
+                <span>3. THEORY & CONCEPTS</span>
+                <span>📘</span>
+              </a>
+              <button
+                onClick={onLaunchSimulation}
+                className="btn-pixel btn-pixel-primary py-2.5 px-5 text-[9px] shadow-[3px_3px_0px_#1E293B] flex items-center gap-2 sm:ml-auto"
+              >
+                <span>LAUNCH SIMULATOR</span>
+                <span>▶</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 1: THREE-WAY HANDSHAKE (Just after Landing Page, before Aim/Theory) */}
+        {/* ========================================================================= */}
+        <ThreeWayHandshakeSection
+          onProceedToAim={() => {
+            const el = document.getElementById('objective');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+        />
+
+        {/* ========================================================================= */}
+        {/* SECTION 2: AIM & OBJECTIVE SECTION                                        */}
+        {/* ========================================================================= */}
+        <section className="card retro-card overflow-hidden" id="objective">
+          <div className="retro-window-header">
+            <div className="flex items-center gap-2">
+              <span>📂</span>
+              <span>WINDOW_02 :: AIM_AND_OBJECTIVE.SYS</span>
+            </div>
+            <div className="retro-window-controls">
+              <div className="retro-win-btn retro-win-btn-min">_</div>
+              <div className="retro-win-btn retro-win-btn-max">□</div>
+              <div className="retro-win-btn retro-win-btn-close">X</div>
+            </div>
+          </div>
+
+          <div className="p-6 md:p-8 flex flex-col gap-6">
+
+            <div className="flex items-center justify-between">
+              <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB]">
+                PROJECT AIM & OBJECTIVES
+              </div>
+              <FolderIcon className="w-10 h-10 hidden sm:block" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-6 items-stretch">
+              
+              {/* Text Card */}
+              <div className="bg-[#F8FAFC] border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg p-6 flex flex-col justify-center gap-3">
+                <h3 className="text-xl md:text-2xl font-bold text-[#1E293B] leading-snug font-['Pixelify_Sans']">
+                  Make TCP's reliability mechanisms visible, not just theoretical.
+                </h3>
+                <p className="text-base text-[#475569] leading-relaxed font-['Pixelify_Sans']">
+                  Textbooks describe flow control and error control in abstract formulas — window sizes, sequence numbers, checksum calculations, and RTO retransmission timers. 
+                  This interactive simulation turns those concepts into live animated events: watch a sender and receiver exchange real file packets over an imperfect network, one acknowledgement at a time.
+                </p>
+              </div>
+
+              {/* Specification Table */}
+              <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col">
+                <div className="bg-[#2563EB] text-white font-['Press_Start_2P'] text-[9px] p-3 border-b-3 border-[#1E293B]">
+                  SPECIFICATION MATRIX
+                </div>
+                <table className="w-full text-left font-['Pixelify_Sans'] text-sm border-collapse flex-1">
+                  <tbody>
+                    <tr className="border-b-2 border-[#E2E8F0]">
+                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] w-[40%] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Course</td>
+                      <td className="p-3 text-[#1E293B] font-bold">Computer Networks</td>
+                    </tr>
+                    <tr className="border-b-2 border-[#E2E8F0]">
+                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Focus</td>
+                      <td className="p-3 text-[#1E293B] font-bold">TCP Flow & Error Control</td>
+                    </tr>
+                    <tr className="border-b-2 border-[#E2E8F0]">
+                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Demonstrates</td>
+                      <td className="p-3 text-[#1E293B] font-bold">Sliding Window, ACK, Retransmit</td>
+                    </tr>
+                    <tr className="border-b-2 border-[#E2E8F0]">
+                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Network Model</td>
+                      <td className="p-3 text-[#1E293B] font-bold">Packet Loss / Corruption / Delay</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Interaction</td>
+                      <td className="p-3 text-[#1E293B] font-bold">Interactive Real-Time Simulation</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 3: CONCEPTS & THEORY SECTION                                      */}
+        {/* ========================================================================= */}
+        <section className="card retro-card overflow-hidden" id="concepts">
+          <div className="retro-window-header">
+            <div className="flex items-center gap-2">
+              <span>🕹️</span>
+              <span>WINDOW_03 :: UNDERSTAND_TCP_CONCEPTS.EXE</span>
+            </div>
+            <div className="retro-window-controls">
+              <div className="retro-win-btn retro-win-btn-min">_</div>
+              <div className="retro-win-btn retro-win-btn-max">□</div>
+              <div className="retro-win-btn retro-win-btn-close">X</div>
+            </div>
+          </div>
+
+          <div className="p-6 md:p-8 flex flex-col gap-6">
+
+            <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB]">
+              UNDERSTAND TCP THROUGH SIMULATION
+            </div>
+
+            <h2 className="text-2xl md:text-3xl font-bold text-[#1E293B] font-['Pixelify_Sans']">
+              Core Reliability & Flow Mechanisms
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+              {/* Module 1 */}
+              <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition-transform">
+                <div className="bg-[#1E293B] text-white font-['Press_Start_2P'] text-[8px] p-2.5 border-b-3 border-[#1E293B] flex justify-between items-center">
+                  <span>MODULE: 01</span>
+                  <MyComputerIcon className="w-6 h-6" />
+                </div>
+                <div className="p-5 flex flex-col gap-3 flex-1 justify-between">
+                  <div>
+                    <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB] mb-1">
+                      FLOW CONTROL
+                    </div>
+                    <h3 className="text-xl font-bold text-[#1E293B] mb-2 font-['Pixelify_Sans']">Regulated Delivery</h3>
+                    <p className="text-sm text-[#475569] leading-relaxed font-['Pixelify_Sans']">
+                      TCP regulates packet transmission based on the receiver's available buffer capacity (`RCV_WND`) to prevent congestion and buffer overflow.
+                    </p>
+                  </div>
+                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B]">
+                    <div className="text-[#2563EB] font-bold">RCV_WND: 65,535 bytes</div>
+                    <div className="text-[#16A34A] font-bold">CWND: min(CWND, RCV_WND)</div>
+                    <div className="text-[#D97706] font-bold">Buffer Status: 0% Overflow</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Module 2 */}
+              <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition-transform">
+                <div className="bg-[#1E293B] text-white font-['Press_Start_2P'] text-[8px] p-2.5 border-b-3 border-[#1E293B] flex justify-between items-center">
+                  <span>MODULE: 02</span>
+                  <NetworkGlobeIcon className="w-6 h-6" />
+                </div>
+                <div className="p-5 flex flex-col gap-3 flex-1 justify-between">
+                  <div>
+                    <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB] mb-1">
+                      ERROR CONTROL
+                    </div>
+                    <h3 className="text-xl font-bold text-[#1E293B] mb-2 font-['Pixelify_Sans']">Checksum & Retransmit</h3>
+                    <p className="text-sm text-[#475569] leading-relaxed font-['Pixelify_Sans']">
+                      Detect corrupted data using 16-bit internet checksums. Automatically retransmit lost packets upon timeout (RTO) or duplicate ACKs.
+                    </p>
+                  </div>
+                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B]">
+                    <div className="text-[#DC2626] font-bold">CRC Mismatch: Corrupt Packet</div>
+                    <div className="text-[#EA580C] font-bold">Duplicate ACKs: 3 Received</div>
+                    <div className="text-[#9333EA] font-bold">Fast Retransmit: Segment Resent</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Module 3 */}
+              <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition-transform">
+                <div className="bg-[#1E293B] text-white font-['Press_Start_2P'] text-[8px] p-2.5 border-b-3 border-[#1E293B] flex justify-between items-center">
+                  <span>MODULE: 03</span>
+                  <CDRomIcon className="w-6 h-6" />
+                </div>
+                <div className="p-5 flex flex-col gap-3 flex-1 justify-between">
+                  <div>
+                    <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB] mb-1">
+                      DATA TRANSMISSION
+                    </div>
+                    <h3 className="text-xl font-bold text-[#1E293B] mb-2 font-['Pixelify_Sans']">Packets In Motion</h3>
+                    <p className="text-sm text-[#475569] leading-relaxed font-['Pixelify_Sans']">
+                      Trace data payload fragmentation into distinct TCP segments, tracking `SND.NXT` and `RCV.NXT` sequence pointers live in action.
+                    </p>
+                  </div>
+                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B]">
+                    <div className="text-[#2563EB] font-bold">SND.NXT: 7719 [MSS: 512B]</div>
+                    <div className="text-[#EA580C] font-bold">RCV.NXT: 7419 (Cumulative)</div>
+                    <div className="text-[#16A34A] font-bold">RTT: 24.5ms (Adaptive)</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 4: DATA STREAM TOPOLOGY PREVIEW & LAUNCH SIMULATOR                */}
+        {/* ========================================================================= */}
+        <section className="card retro-card overflow-hidden" id="stream-topology">
+          <div className="retro-window-header">
+            <div className="flex items-center gap-2">
+              <span>📡</span>
+              <span>WINDOW_04 :: LIVE_DATA_STREAM_TOPOLOGY.SYS</span>
+            </div>
+            <div className="retro-window-controls">
+              <div className="retro-win-btn retro-win-btn-min">_</div>
+              <div className="retro-win-btn retro-win-btn-max">□</div>
+              <div className="retro-win-btn retro-win-btn-close">X</div>
+            </div>
+          </div>
+
+          <div className="p-6 md:p-8 flex flex-col gap-6">
+
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB] mb-1">
+                  POST-HANDSHAKE PHASE: DATA STREAMING
+                </div>
+                <h2 className="text-2xl font-bold text-[#1E293B] font-['Pixelify_Sans']">
+                  Sliding Window File Transfer Topology
+                </h2>
+              </div>
+              <NetworkGlobeIcon className="w-10 h-10 hidden sm:block" />
             </div>
 
             {/* LIGHT RETRO WINDOWS TOPOLOGY LIVE PREVIEW STAGE */}
@@ -217,7 +454,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onSh
                 </div>
               </div>
 
-              {/* Nodes Grid (Light Windows Design) */}
+              {/* Nodes Grid */}
               <div className="grid grid-cols-1 md:grid-cols-[210px_1fr_210px] gap-6 items-center py-2">
                 
                 {/* Sender Node */}
@@ -323,214 +560,27 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onSh
 
             </div>
 
-          </div>
-        </section>
-
-        {/* AIM & OBJECTIVE SECTION */}
-        <section className="card retro-card overflow-hidden" id="objective">
-          <div className="retro-window-header">
-            <div className="flex items-center gap-2">
-              <span>📂</span>
-              <span>WINDOW_02 :: AIM_AND_OBJECTIVE.SYS</span>
-            </div>
-            <div className="retro-window-controls">
-              <div className="retro-win-btn retro-win-btn-min">_</div>
-              <div className="retro-win-btn retro-win-btn-max">□</div>
-              <div className="retro-win-btn retro-win-btn-close">X</div>
-            </div>
-          </div>
-
-          <div className="p-6 md:p-8 flex flex-col gap-6">
-
-            <div className="flex items-center justify-between">
-              <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB]">
-                PROJECT AIM & OBJECTIVES
+            {/* Launch CTA Box */}
+            <div className="bg-[#FFFDF5] border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg p-6 sm:p-8 flex flex-col items-center text-center gap-3 mt-2">
+              <MyComputerIcon className="w-14 h-14 pixel-float" />
+              <div className="font-['Press_Start_2P'] text-[10px] text-[#2563EB]">
+                INTERACTIVE LAB EXPERIMENT
               </div>
-              <FolderIcon className="w-10 h-10 hidden sm:block" />
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#1E293B] font-['Pixelify_Sans']">
+                Ready to experiment with real TCP packets?
+              </h3>
+              <p className="text-base text-[#475569] max-w-[650px] leading-relaxed">
+                Launch the full interactive simulator to adjust window size, inject checksum corruption, simulate packet drop loss, and watch TCP error recovery in real time.
+              </p>
+              <button
+                onClick={onLaunchSimulation}
+                className="btn-pixel btn-pixel-primary py-3.5 px-8 text-xs flex items-center gap-3 mt-2 shadow-[4px_4px_0px_#1E293B]"
+              >
+                <span>LAUNCH SIMULATOR</span>
+                <span>▶</span>
+              </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-6 items-stretch">
-              
-              {/* Text Card */}
-              <div className="bg-[#F8FAFC] border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg p-6 flex flex-col justify-center gap-3">
-                <h3 className="text-xl md:text-2xl font-bold text-[#1E293B] leading-snug font-['Pixelify_Sans']">
-                  Make TCP's reliability mechanisms visible, not just theoretical.
-                </h3>
-                <p className="text-base text-[#475569] leading-relaxed font-['Pixelify_Sans']">
-                  Textbooks describe flow control and error control in abstract formulas — window sizes, sequence numbers, checksum calculations, and RTO retransmission timers. 
-                  This interactive simulation turns those concepts into live animated events: watch a sender and receiver exchange real file packets over an imperfect network, one acknowledgement at a time.
-                </p>
-              </div>
-
-              {/* Specification Table */}
-              <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col">
-                <div className="bg-[#2563EB] text-white font-['Press_Start_2P'] text-[9px] p-3 border-b-3 border-[#1E293B]">
-                  SPECIFICATION MATRIX
-                </div>
-                <table className="w-full text-left font-['Pixelify_Sans'] text-sm border-collapse flex-1">
-                  <tbody>
-                    <tr className="border-b-2 border-[#E2E8F0]">
-                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] w-[40%] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Course</td>
-                      <td className="p-3 text-[#1E293B] font-bold">Computer Networks</td>
-                    </tr>
-                    <tr className="border-b-2 border-[#E2E8F0]">
-                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Focus</td>
-                      <td className="p-3 text-[#1E293B] font-bold">TCP Flow & Error Control</td>
-                    </tr>
-                    <tr className="border-b-2 border-[#E2E8F0]">
-                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Demonstrates</td>
-                      <td className="p-3 text-[#1E293B] font-bold">Sliding Window, ACK, Retransmit</td>
-                    </tr>
-                    <tr className="border-b-2 border-[#E2E8F0]">
-                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Network Model</td>
-                      <td className="p-3 text-[#1E293B] font-bold">Packet Loss / Corruption / Delay</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 font-bold text-[#2563EB] bg-[#F8FAFC] border-r-2 border-[#E2E8F0] font-['Press_Start_2P'] text-[9px]">Interaction</td>
-                      <td className="p-3 text-[#1E293B] font-bold">Interactive Real-Time Simulation</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
-
-        {/* CONCEPTS SECTION */}
-        <section className="card retro-card overflow-hidden" id="concepts">
-          <div className="retro-window-header">
-            <div className="flex items-center gap-2">
-              <span>🕹️</span>
-              <span>WINDOW_03 :: UNDERSTAND_TCP_CONCEPTS.EXE</span>
-            </div>
-            <div className="retro-window-controls">
-              <div className="retro-win-btn retro-win-btn-min">_</div>
-              <div className="retro-win-btn retro-win-btn-max">□</div>
-              <div className="retro-win-btn retro-win-btn-close">X</div>
-            </div>
-          </div>
-
-          <div className="p-6 md:p-8 flex flex-col gap-6">
-
-            <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB]">
-              UNDERSTAND TCP THROUGH SIMULATION
-            </div>
-
-            <h2 className="text-2xl md:text-3xl font-bold text-[#1E293B] font-['Pixelify_Sans']">
-              Core Reliability & Flow Mechanisms
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-              {/* Module 1 */}
-              <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition-transform">
-                <div className="bg-[#1E293B] text-white font-['Press_Start_2P'] text-[8px] p-2.5 border-b-3 border-[#1E293B] flex justify-between items-center">
-                  <span>MODULE: 01</span>
-                  <MyComputerIcon className="w-6 h-6" />
-                </div>
-                <div className="p-5 flex flex-col gap-3 flex-1 justify-between">
-                  <div>
-                    <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB] mb-1">
-                      FLOW CONTROL
-                    </div>
-                    <h3 className="text-xl font-bold text-[#1E293B] mb-2 font-['Pixelify_Sans']">Regulated Delivery</h3>
-                    <p className="text-sm text-[#475569] leading-relaxed font-['Pixelify_Sans']">
-                      TCP regulates packet transmission based on the receiver's available buffer capacity (`RCV_WND`) to prevent congestion and buffer overflow.
-                    </p>
-                  </div>
-                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B]">
-                    <div className="text-[#2563EB] font-bold">RCV_WND: 65,535 bytes</div>
-                    <div className="text-[#16A34A] font-bold">CWND: min(CWND, RCV_WND)</div>
-                    <div className="text-[#D97706] font-bold">Buffer Status: 0% Overflow</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Module 2 */}
-              <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition-transform">
-                <div className="bg-[#1E293B] text-white font-['Press_Start_2P'] text-[8px] p-2.5 border-b-3 border-[#1E293B] flex justify-between items-center">
-                  <span>MODULE: 02</span>
-                  <NetworkGlobeIcon className="w-6 h-6" />
-                </div>
-                <div className="p-5 flex flex-col gap-3 flex-1 justify-between">
-                  <div>
-                    <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB] mb-1">
-                      ERROR CONTROL
-                    </div>
-                    <h3 className="text-xl font-bold text-[#1E293B] mb-2 font-['Pixelify_Sans']">Checksum & Retransmit</h3>
-                    <p className="text-sm text-[#475569] leading-relaxed font-['Pixelify_Sans']">
-                      Detect corrupted data using 16-bit internet checksums. Automatically retransmit lost packets upon timeout (RTO) or duplicate ACKs.
-                    </p>
-                  </div>
-                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B]">
-                    <div className="text-[#DC2626] font-bold">CRC Mismatch: Corrupt Packet</div>
-                    <div className="text-[#EA580C] font-bold">Duplicate ACKs: 3 Received</div>
-                    <div className="text-[#9333EA] font-bold">Fast Retransmit: Segment Resent</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Module 3 */}
-              <div className="bg-white border-3 border-[#1E293B] shadow-[4px_4px_0px_#1E293B] rounded-lg overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition-transform">
-                <div className="bg-[#1E293B] text-white font-['Press_Start_2P'] text-[8px] p-2.5 border-b-3 border-[#1E293B] flex justify-between items-center">
-                  <span>MODULE: 03</span>
-                  <CDRomIcon className="w-6 h-6" />
-                </div>
-                <div className="p-5 flex flex-col gap-3 flex-1 justify-between">
-                  <div>
-                    <div className="font-['Press_Start_2P'] text-[9px] text-[#2563EB] mb-1">
-                      DATA TRANSMISSION
-                    </div>
-                    <h3 className="text-xl font-bold text-[#1E293B] mb-2 font-['Pixelify_Sans']">Packets In Motion</h3>
-                    <p className="text-sm text-[#475569] leading-relaxed font-['Pixelify_Sans']">
-                      Trace data payload fragmentation into distinct TCP segments, tracking `SND.NXT` and `RCV.NXT` sequence pointers live in action.
-                    </p>
-                  </div>
-                  <div className="bg-[#F1F5F9] border-2 border-[#1E293B] rounded p-3 font-['VT323'] text-base text-[#1E293B]">
-                    <div className="text-[#2563EB] font-bold">SND.NXT: 7719 [MSS: 512B]</div>
-                    <div className="text-[#EA580C] font-bold">RCV.NXT: 7419 (Cumulative)</div>
-                    <div className="text-[#16A34A] font-bold">RTT: 24.5ms (Adaptive)</div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
-
-        {/* CTA DIALOGUE WINDOW */}
-        <section className="card retro-card overflow-hidden text-center max-w-[900px] mx-auto w-full my-4">
-          <div className="retro-window-header bg-[#0F172A]">
-            <div className="flex items-center gap-2">
-              <span>🖥️</span>
-              <span>SYSTEM_DIALOGUE :: LAUNCH_SIMULATOR.EXE</span>
-            </div>
-            <div className="retro-window-controls">
-              <div className="retro-win-btn retro-win-btn-close">X</div>
-            </div>
-          </div>
-
-          <div className="p-8 md:p-10 flex flex-col items-center gap-4">
-            <MyComputerIcon className="w-16 h-16 pixel-float" />
-            <div className="font-['Press_Start_2P'] text-[10px] text-[#2563EB]">
-              READY TO TEST TCP SIMULATION?
-            </div>
-            <h2 className="text-3xl font-bold text-[#1E293B] font-['Pixelify_Sans']">
-              Ready to see TCP in action?
-            </h2>
-            <p className="text-base text-[#475569] max-w-[650px] leading-relaxed font-['Pixelify_Sans']">
-              Launch the full interactive simulator to experiment with packet loss, delay jitter, checksum corruption, and sliding window flow control.
-            </p>
-            <button
-              onClick={onLaunchSimulation}
-              className="btn-pixel btn-pixel-primary py-4 px-8 text-sm flex items-center gap-3 mt-2 shadow-[4px_4px_0px_#1E293B]"
-            >
-              <span>LAUNCH SIMULATOR</span>
-              <span>▶</span>
-            </button>
           </div>
         </section>
 
@@ -538,9 +588,7 @@ export default function OverviewPage({ onLaunchSimulation, onBackToLanding, onSh
         <footer className="text-center font-['Press_Start_2P'] text-[8px] text-[#64748B] pt-4 flex flex-col gap-2">
           <div className="flex justify-center gap-4 flex-wrap">
             <button onClick={onBackToLanding} className="hover:text-[#2563EB] cursor-pointer">Landing</button>
-            {onShowHandshake && (
-              <button onClick={onShowHandshake} className="hover:text-[#2563EB] cursor-pointer">Handshake 🤝</button>
-            )}
+            <a href="#handshake" className="hover:text-[#2563EB]">Handshake 🤝</a>
             <a href="#objective" className="hover:text-[#2563EB]">Aim</a>
             <a href="#concepts" className="hover:text-[#2563EB]">Concepts</a>
             <button onClick={onLaunchSimulation} className="hover:text-[#2563EB] cursor-pointer">Simulator ▶</button>

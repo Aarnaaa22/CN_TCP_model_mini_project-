@@ -20,8 +20,14 @@ export default function App() {
   const [lastEventType, setLastEventType] = useState(null);
   const [showCompletion, setShowCompletion] = useState(false);
   
-  // pageStage: 'landing' | 'handshake' | 'overview' | 'simulation'
+  // pageStage: 'landing' | 'overview' | 'simulation'
   const [pageStage, setPageStage] = useState('landing');
+  const [targetSection, setTargetSection] = useState(null);
+
+  const goToOverview = (section = null) => {
+    setTargetSection(section);
+    setPageStage('overview');
+  };
 
   const handleEvent = useCallback((event) => {
     dispatch({ event });
@@ -40,29 +46,29 @@ export default function App() {
     }, 100);
   }
 
-  // Stage 1: Landing Page
+  // Stage 1: Landing Page (Start button goes directly to Handshake section in Overview)
   if (pageStage === 'landing') {
-    return <LandingPage onStart={() => setPageStage('handshake')} />;
+    return <LandingPage onStart={() => goToOverview('handshake')} />;
   }
 
-  // Stage 2: Three-Way Handshake Simulation (Just after Landing Page)
+  // Stage 2: Handshake (Replaced standalone page - routes directly to Overview's Handshake section)
   if (pageStage === 'handshake') {
     return (
-      <HandshakeSimulation
-        onProceedToOverview={() => setPageStage('overview')}
-        onProceedToSimulation={() => setPageStage('simulation')}
+      <OverviewPage
+        initialSection="handshake"
+        onLaunchSimulation={() => setPageStage('simulation')}
         onBackToLanding={() => setPageStage('landing')}
       />
     );
   }
 
-  // Stage 3: Overview & Concepts Page
+  // Stage 3: Overview Page (Contains Handshake Section -> Aim Section -> Theory Section -> Simulator)
   if (pageStage === 'overview') {
     return (
       <OverviewPage
+        initialSection={targetSection}
         onLaunchSimulation={() => setPageStage('simulation')}
         onBackToLanding={() => setPageStage('landing')}
-        onShowHandshake={() => setPageStage('handshake')}
       />
     );
   }
@@ -74,8 +80,8 @@ export default function App() {
         connected={connected}
         status={sim.status}
         onShowLanding={() => setPageStage('landing')}
-        onShowHandshake={() => setPageStage('handshake')}
-        onShowOverview={() => setPageStage('overview')}
+        onShowHandshake={() => goToOverview('handshake')}
+        onShowOverview={() => goToOverview('objective')}
       />
 
       <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-4 flex flex-col gap-4">
